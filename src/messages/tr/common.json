@@ -1,0 +1,12 @@
+{
+  "welcome": "Hoş Geldiniz",
+  "homepage": {
+    "description": "Bu çok dilli bir web sitesidir."
+  },
+  "navigation": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "products": "Ürünler",
+    "contact": "İletişim"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "proxy-start",
+  "module": "index.ts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "dev:locale": "vite dev --host 0.0.0.0",
+    "start:locale": "bun run .output/server/index.mjs",
+    "build:locale": "vite build",
+    "build:production": "cp .env.production .env && vite build",
+    "deploy": "bunx wrangler --cwd dist/ pages deploy"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
+    "@tanstack/react-router": "^1.124.0",
+    "@tanstack/react-start": "^1.124.1",
+    "@tanstack/router": "^0.0.1-beta.53",
+    "@tanstack/start": "^1.120.20",
+    "@types/js-cookie": "^3.0.6",
+    "i18next": "^25.3.0",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.517.0",
+    "motion": "^12.23.0",
+    "postcss": "^8.5.6",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.5.3",
+    "sonner": "^2.0.5",
+    "tailwindcss": "^4.1.11",
+    "unenv": "^1.10.0",
+    "zod": "^3.25.71"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.13",
+    "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

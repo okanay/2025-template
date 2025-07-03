@@ -1,0 +1,12 @@
+{
+  "welcome": "Welcome",
+  "homepage": {
+    "description": "This is a multilingual website."
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products",
+    "contact": "Contact"
+  }
+}

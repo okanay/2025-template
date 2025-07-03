@@ -1,0 +1,19 @@
+/* ./src/styles/globals.css */
+@import './font.css';
+@import 'tailwindcss' source('..');
+@import './themes.css';
+
+@theme {
+  --font-custom-sans: 'Fellix', 'Helvetica Neue', 'IBM Plex Sans', 'sans-serif';
+}
+
+@layer base {
+  * {
+    @apply appearance-none font-custom-sans focus:outline-none;
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
