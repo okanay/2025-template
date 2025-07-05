@@ -5,6 +5,7 @@
 .env.production.local
 .env.production
 .env.local
+wrangler.toml
 
 # Local
 .DS_Store
