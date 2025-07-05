@@ -7,14 +7,12 @@ export const Route = createFileRoute('/$lang/')({
 })
 
 function HomePage() {
-  const { t } = useTranslation('common')
-
   return (
     <div className="flex min-h-screen bg-surface text-on-background">
       <main className="mx-auto flex max-w-7xl flex-col items-center justify-center space-y-4 p-4">
         <div className="rounded-xl bg-inverse-surface p-4">
           <h3 className="font-serif text-lg font-medium text-inverse-primary">Kart Başlığı</h3>
-          <p className="mt-2 text-inverse-on-surface">{t('welcome')}</p>
+          <p className="mt-2 text-inverse-on-surface">Merhaba</p>
         </div>
 
         <div className="rounded-xl bg-surface-container p-4">
