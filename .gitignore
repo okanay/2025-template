@@ -12,15 +12,25 @@
 *.log*
 
 # Dist
-node_modules
+node_modules/
 dist/
-.vinxi
-.output
-.vercel
-.netlify
-.wrangler
-.nitro/types
-.tanstack/start/build/client-dist
+.vinxi/
+.output/
+.vercel/
+.netlify/
+.wrangler/
+.nitro/types/
+**/.git/
+**/.next/
+**/node_modules/
+**/.nitro/
+**/.output/
+**/.wrangler/
+**/tanstack/
+**/.tanstack/
+**/.DS_Store/
+**/bin/
+**/tmp/
 
 # IDE
 .vscode/*
