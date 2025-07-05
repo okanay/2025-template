@@ -1,112 +1,110 @@
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-  redirect,
-} from "@tanstack/react-router";
-import { type ReactNode } from "react";
-import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "src/i18n/config";
-import { getPreferedLanguage } from "src/i18n/get-language";
-import LanguageProvider from "src/i18n/prodiver";
-import globals from "../styles/globals.css?url";
-import { AppProviders } from "src/providers";
+import { createRootRoute, HeadContent, Outlet, redirect, Scripts } from '@tanstack/react-router'
+import { type ReactNode } from 'react'
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from 'src/i18n/config'
+import { getPreferedLanguage } from 'src/i18n/get-language'
+import LanguageProvider from 'src/i18n/prodiver'
+import { AppProviders } from 'src/providers'
+import { getPreferedTheme, ThemeStore, useTheme } from 'src/store/theme'
+import globals from '../styles/globals.css?url'
+import { Link } from 'src/i18n/link'
 
 export const Route = createRootRoute({
   beforeLoad: async (ctx) => {
-    const segments = ctx.location.pathname.split("/").filter(Boolean);
-    const [langSegment] = segments;
+    const segments = ctx.location.pathname.split('/').filter(Boolean)
+    const [langSegment] = segments
 
     const staticAssetPattern =
-      /\.(ico|png|jpg|jpeg|svg|webp|css|js|woff2?|ttf|eot|map|xml|webmanifest)$/i;
+      /\.(ico|png|jpg|jpeg|svg|webp|css|js|woff2?|ttf|eot|map|xml|webmanifest)$/i
     if (staticAssetPattern.test(ctx.location.pathname)) {
-      return;
+      return
     }
 
-    const currentLanguage = SUPPORTED_LANGUAGES.find(
-      ({ value }) => value === langSegment,
-    );
+    const currentLanguage = SUPPORTED_LANGUAGES.find(({ value }) => value === langSegment)
 
     if (currentLanguage) {
-      return { langSegment, currentLanguage };
+      return { langSegment, currentLanguage }
     }
 
-    const preferedLanguage = await getPreferedLanguage();
+    const preferedLanguage = await getPreferedLanguage()
     throw redirect({
       href: `/${preferedLanguage.value}`,
       statusCode: 302,
-    });
+    })
   },
-  loader: async ({ context }) => {
-    const language = context?.currentLanguage || DEFAULT_LANGUAGE;
-    return { language };
+  loader: async (loader) => {
+    const language = loader.context?.currentLanguage || DEFAULT_LANGUAGE
+    const theme = await getPreferedTheme()
+
+    return { language, theme }
   },
   head: () => ({
     meta: [
       {
-        charSet: "utf-8",
+        charSet: 'utf-8',
       },
       {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1',
       },
       {
-        title: "TanStack Start Starter",
+        title: 'TanStack Start Starter',
       },
     ],
     links: [
       {
-        rel: "preload stylesheet",
-        as: "style",
-        type: "text/css",
-        crossOrigin: "anonymous",
+        rel: 'preload stylesheet',
+        as: 'style',
+        type: 'text/css',
+        crossOrigin: 'anonymous',
         href: globals,
       },
       {
-        rel: "icon",
-        href: "/favicon.ico",
+        rel: 'icon',
+        href: '/favicon.ico',
       },
       {
-        rel: "manifest",
-        href: "/site.webmanifest",
-        color: "#ffffff",
+        rel: 'manifest',
+        href: '/site.webmanifest',
+        color: '#ffffff',
       },
       {
-        rel: "sitemap",
-        type: "application/xml",
-        title: "sitemap",
+        rel: 'sitemap',
+        type: 'application/xml',
+        title: 'sitemap',
         href: `/api/sitemap`,
       },
       {
-        rel: "preload",
-        as: "image",
-        type: "image/svg+xml",
+        rel: 'preload',
+        as: 'image',
+        type: 'image/svg+xml',
         href: `/images/brand.svg`,
       },
       {
-        rel: "preload",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
         href: `/fonts/custom-sans/regular.woff2`,
       },
       {
-        rel: "preload",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
         href: `/fonts/custom-sans/medium.woff2`,
       },
     ],
   }),
   component: RootComponent,
-});
+  staleTime: Infinity,
+})
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-  const { language } = Route.useLoaderData();
+  const { language, theme } = Route.useLoaderData()
+  const themeClass = theme === 'system' ? undefined : theme
 
   return (
-    <html lang={language.locale} dir={language.direction}>
+    <html lang={language.locale} dir={language.direction} className={themeClass}>
       <head>
         <HeadContent />
       </head>
@@ -115,19 +113,39 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 function RootComponent() {
-  const { language } = Route.useLoaderData();
+  const { language, theme } = Route.useLoaderData()
 
   return (
     <RootDocument>
-      <LanguageProvider serverLanguage={language}>
-        <AppProviders>
-          <Outlet />
-        </AppProviders>
-      </LanguageProvider>
+      <ThemeStore initialTheme={theme}>
+        <LanguageProvider serverLanguage={language}>
+          <AppProviders>
+            <Outlet />
+          </AppProviders>
+        </LanguageProvider>
+      </ThemeStore>
     </RootDocument>
-  );
+  )
+}
+
+const ChangeThemeButton = () => {
+  const { theme, setTheme, clearTheme } = useTheme()
+
+  return (
+    <ul className="flex flex-col gap-1 text-sm">
+      <li>
+        <button onClick={() => setTheme('light')}>Light</button>
+      </li>
+      <li>
+        <button onClick={() => setTheme('dark')}>Dark</button>
+      </li>
+      <li>
+        <button onClick={clearTheme}>System</button>
+      </li>
+    </ul>
+  )
 }

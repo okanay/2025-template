@@ -1,0 +1,44 @@
+{
+  "../../../../~start/default-client-entry.tsx": {
+    "file": "assets/main-eizx05DL.js",
+    "name": "main",
+    "src": "../../../../~start/default-client-entry.tsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/routes/index.tsx?tsr-split=component",
+      "src/routes/$lang/index.tsx?tsr-split=component",
+      "src/routes/$lang/about.tsx?tsr-split=component"
+    ],
+    "assets": [
+      "assets/globals-C5WO_tRD.css"
+    ]
+  },
+  "/Users/okanay/Desktop/tanstack-template/src/styles/globals.css": {
+    "file": "assets/globals-C5WO_tRD.css",
+    "src": "/Users/okanay/Desktop/tanstack-template/src/styles/globals.css"
+  },
+  "src/routes/$lang/about.tsx?tsr-split=component": {
+    "file": "assets/about-Sxf5ZPfr.js",
+    "name": "about",
+    "src": "src/routes/$lang/about.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "../../../../~start/default-client-entry.tsx"
+    ]
+  },
+  "src/routes/$lang/index.tsx?tsr-split=component": {
+    "file": "assets/index-O8H-Wkz7.js",
+    "name": "index",
+    "src": "src/routes/$lang/index.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "../../../../~start/default-client-entry.tsx"
+    ]
+  },
+  "src/routes/index.tsx?tsr-split=component": {
+    "file": "assets/index-DtqBFgK5.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  }
+}

@@ -19,6 +19,7 @@ dist/
 .vercel
 .netlify
 .wrangler
+.nitro
 
 # IDE
 .vscode/*

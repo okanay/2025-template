@@ -1,9 +1,8 @@
-import commonTR from "./tr/common.json";
-import commonEN from "./en/common.json";
-import commonFR from "./fr/common.json";
+import commonTR from './tr/common.json'
+import commonEN from './en/common.json'
 
-export const defaultNS = "translation";
-export const ns = ["translation", "common"];
+export const defaultNS = 'translation'
+export const ns = ['translation', 'common']
 
 const resource = {
   tr: {
@@ -14,10 +13,6 @@ const resource = {
     translation: {},
     common: commonEN,
   },
-  fr: {
-    translation: {},
-    common: commonFR,
-  },
-};
+}
 
-export default resource;
+export default resource

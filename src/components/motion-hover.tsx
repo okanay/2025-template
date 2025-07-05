@@ -1,6 +1,6 @@
 import { useAnimationControls, Variants } from 'motion/react'
 import * as m from 'motion/react-m'
-import { useMotionHover } from 'src/helpers/useMotionHover'
+import { useMotionHover } from 'src/hooks/use-motion-hover'
 
 const cardVariants: Variants = {
   initial: {},
