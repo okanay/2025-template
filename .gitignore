@@ -19,7 +19,8 @@ dist/
 .vercel
 .netlify
 .wrangler
-.nitro
+.nitro/types
+.tanstack/start/build/client-dist
 
 # IDE
 .vscode/*

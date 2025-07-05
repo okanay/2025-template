@@ -4,30 +4,29 @@ import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from 'src/i18n/config'
 import { getPreferedLanguage } from 'src/i18n/get-language'
 import LanguageProvider from 'src/i18n/prodiver'
 import { AppProviders } from 'src/providers'
-import { getPreferedTheme, ThemeStore, useTheme } from 'src/store/theme'
+import { getPreferedTheme, ThemeStore } from 'src/store/theme'
 import globals from '../styles/globals.css?url'
-import { Link } from 'src/i18n/link'
 
 export const Route = createRootRoute({
   beforeLoad: async (ctx) => {
-    const segments = ctx.location.pathname.split('/').filter(Boolean)
-    const [langSegment] = segments
+    const pathSegments = ctx.location.pathname.split('/').filter(Boolean)
+    const [languageSegment] = pathSegments
 
-    const staticAssetPattern =
+    const isStaticAsset =
       /\.(ico|png|jpg|jpeg|svg|webp|css|js|woff2?|ttf|eot|map|xml|webmanifest)$/i
-    if (staticAssetPattern.test(ctx.location.pathname)) {
+    if (isStaticAsset.test(ctx.location.pathname)) {
       return
     }
 
-    const currentLanguage = SUPPORTED_LANGUAGES.find(({ value }) => value === langSegment)
+    const matchedLanguage = SUPPORTED_LANGUAGES.find(({ value }) => value === languageSegment)
 
-    if (currentLanguage) {
-      return { langSegment, currentLanguage }
+    if (matchedLanguage) {
+      return { langSegment: languageSegment, currentLanguage: matchedLanguage }
     }
 
-    const preferedLanguage = await getPreferedLanguage()
+    const preferredLanguage = await getPreferedLanguage()
     throw redirect({
-      href: `/${preferedLanguage.value}`,
+      href: `/${preferredLanguage.value}`,
       statusCode: 302,
     })
   },
@@ -95,16 +94,15 @@ export const Route = createRootRoute({
       },
     ],
   }),
+
   component: RootComponent,
-  staleTime: Infinity,
 })
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const { language, theme } = Route.useLoaderData()
-  const themeClass = theme === 'system' ? undefined : theme
 
   return (
-    <html lang={language.locale} dir={language.direction} className={themeClass}>
+    <html lang={language.locale} dir={language.direction} className={theme}>
       <head>
         <HeadContent />
       </head>
@@ -129,23 +127,5 @@ function RootComponent() {
         </LanguageProvider>
       </ThemeStore>
     </RootDocument>
-  )
-}
-
-const ChangeThemeButton = () => {
-  const { theme, setTheme, clearTheme } = useTheme()
-
-  return (
-    <ul className="flex flex-col gap-1 text-sm">
-      <li>
-        <button onClick={() => setTheme('light')}>Light</button>
-      </li>
-      <li>
-        <button onClick={() => setTheme('dark')}>Dark</button>
-      </li>
-      <li>
-        <button onClick={clearTheme}>System</button>
-      </li>
-    </ul>
   )
 }

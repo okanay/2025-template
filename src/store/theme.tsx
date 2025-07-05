@@ -1,9 +1,9 @@
-import { createServerFn } from '@tanstack/react-start'
-import { getCookie } from '@tanstack/react-start/server'
-import { createContext, PropsWithChildren, useContext, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { createStore, StoreApi, useStore } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import Cookies from 'js-cookie'
+import { getCookie } from '@tanstack/react-start/server'
+import { createServerFn } from '@tanstack/react-start'
 
 declare global {
   type Theme = 'light' | 'dark' | 'system'
@@ -12,77 +12,92 @@ declare global {
 interface DataState {
   theme: Theme
   setTheme: (theme: Theme) => void
-  clearTheme: () => void
 }
 
 type Props = PropsWithChildren & {
-  initialTheme?: Theme
+  initialTheme: Theme
 }
 
 export const THEME_SET: Theme[] = ['light', 'dark', 'system']
-export const THEME_DEFAULT = 'system'
+export const THEME_DEFAULT: Theme = 'system'
 export const THEME_COOKIE_KEY = 'theme'
-export const THEME_COOKIE_DURATION = 365 * 24 * 60 * 60 * 1000
+export const THEME_COOKIE_DURATION = 365
 
 export function ThemeStore({ children, initialTheme }: Props) {
   const [store] = useState(() =>
     createStore<DataState>()(
-      immer((set, get) => ({
-        theme: initialTheme || THEME_DEFAULT,
+      immer((set) => ({
+        theme: initialTheme,
         setTheme: (theme) => {
-          // 1.0 : Check if the theme is already set to the desired theme
-          if (theme === get().theme) return
-
-          // 2.0 : Check if the theme is valid
           if (!THEME_SET.includes(theme)) return
 
-          // 3.0 : Change <html> class to new theme.
-          document.documentElement.classList.remove('light', 'dark')
-          document.documentElement.classList.add(theme)
-
-          // 4.0 : Update the theme in the store
           set({ theme })
 
-          // 5.0 : Update the theme in the cookie
-          Cookies.set(THEME_COOKIE_KEY, theme, { expires: THEME_COOKIE_DURATION })
-        },
-        clearTheme: () => {
-          // 1.0 : Remove the class attribute from <html>.
-          document.documentElement.removeAttribute('class')
+          if (theme === 'system') {
+            Cookies.remove(THEME_COOKIE_KEY)
+            localStorage.removeItem('theme')
+            document.documentElement.classList.remove('light', 'dark')
 
-          // 2.0 : Update the theme in the store
-          set({ theme: THEME_DEFAULT })
-
-          // 3.0 : Update the theme in the cookie
-          Cookies.remove(THEME_COOKIE_KEY)
+            const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+            document.documentElement.classList.add(prefersDarkMode ? 'dark' : 'light')
+          } else {
+            Cookies.set(THEME_COOKIE_KEY, theme, { expires: THEME_COOKIE_DURATION })
+            localStorage.setItem('theme', theme)
+            document.documentElement.classList.remove('light', 'dark')
+            document.documentElement.classList.add(theme)
+          }
         },
       })),
     ),
   )
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    const updateTheme = () => {
+      const currentTheme = store.getState().theme
+      const rootElement = document.documentElement
+
+      rootElement.classList.remove('light', 'dark')
+
+      if (currentTheme === 'system') {
+        rootElement.classList.add(mediaQuery.matches ? 'dark' : 'light')
+      } else {
+        rootElement.classList.add(currentTheme)
+      }
+    }
+
+    // Apply the theme on initial load and whenever the theme state changes
+    updateTheme()
+
+    mediaQuery.addEventListener('change', updateTheme)
+    return () => {
+      mediaQuery.removeEventListener('change', updateTheme)
+    }
+  }, [])
+
   return <ThemeContext.Provider value={store}>{children}</ThemeContext.Provider>
 }
 
 export const getPreferedTheme = createServerFn({ method: 'GET' }).handler(async () => {
-  const themeInCookie = getCookie(THEME_COOKIE_KEY)
+  const themeFromCookie = getCookie(THEME_COOKIE_KEY) as Theme | undefined
 
-  if (themeInCookie) {
-    const isPreferedThemeSafe = THEME_SET.find((t) => t === themeInCookie)
-
-    if (isPreferedThemeSafe) return isPreferedThemeSafe
+  if (themeFromCookie && THEME_SET.includes(themeFromCookie)) {
+    return themeFromCookie
   }
 
+  // The server cannot detect the OS preference, so it defaults to 'system' if no cookie is found.
   return THEME_DEFAULT
 })
+
+// Context and helper functions
+type Context = StoreApi<DataState> | undefined
+const ThemeContext = createContext<Context>(undefined)
 
 export function useTheme() {
   const context = useContext(ThemeContext)
   if (!context) {
-    throw new Error('useAuth hook must be used within an AuthProvider')
+    throw new Error('useTheme must be used within a ThemeProvider')
   }
   return useStore(context, (state) => state)
 }
-
-// Theme Not Importend Types
-type Context = StoreApi<DataState> | undefined
-const ThemeContext = createContext<Context>(undefined)
