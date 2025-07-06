@@ -36,15 +36,14 @@ export function ThemeStore({ children, initialTheme }: Props) {
           if (theme === 'system') {
             Cookies.remove(THEME_COOKIE_KEY)
             localStorage.removeItem('theme')
-            document.documentElement.classList.remove('light', 'dark')
+            document.documentElement.removeAttribute('data-theme')
 
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-            document.documentElement.classList.add(prefersDarkMode ? 'dark' : 'light')
+            document.documentElement.setAttribute('data-theme', prefersDarkMode ? 'dark' : 'light')
           } else {
             Cookies.set(THEME_COOKIE_KEY, theme, { expires: THEME_COOKIE_DURATION })
             localStorage.setItem('theme', theme)
-            document.documentElement.classList.remove('light', 'dark')
-            document.documentElement.classList.add(theme)
+            document.documentElement.setAttribute('data-theme', theme)
           }
         },
       })),
@@ -58,12 +57,12 @@ export function ThemeStore({ children, initialTheme }: Props) {
       const currentTheme = store.getState().theme
       const rootElement = document.documentElement
 
-      rootElement.classList.remove('light', 'dark')
+      rootElement.removeAttribute('data-theme')
 
       if (currentTheme === 'system') {
-        rootElement.classList.add(mediaQuery.matches ? 'dark' : 'light')
+        rootElement.setAttribute('data-theme', mediaQuery.matches ? 'dark' : 'light')
       } else {
-        rootElement.classList.add(currentTheme)
+        rootElement.setAttribute('data-theme', currentTheme)
       }
     }
 

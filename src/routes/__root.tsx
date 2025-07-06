@@ -12,16 +12,24 @@ export const Route = createRootRoute({
     const pathSegments = ctx.location.pathname.split('/').filter(Boolean)
     const [languageSegment] = pathSegments
 
-    const isStaticAsset =
-      /\.(ico|png|jpg|jpeg|svg|webp|css|js|woff2?|ttf|eot|map|xml|webmanifest)$/i
-    if (isStaticAsset.test(ctx.location.pathname)) {
+    if (
+      /\.(ico|png|jpg|jpeg|svg|webp|css|js|woff2?|ttf|eot|map|xml|webmanifest)$/i.test(
+        ctx.location.pathname,
+      )
+    ) {
       return
     }
 
     const matchedLanguage = SUPPORTED_LANGUAGES.find(({ value }) => value === languageSegment)
 
     if (matchedLanguage) {
-      return { langSegment: languageSegment, currentLanguage: matchedLanguage }
+      const theme = await getPreferedTheme()
+
+      return {
+        langSegment: languageSegment,
+        currentLanguage: matchedLanguage,
+        theme,
+      }
     }
 
     const preferredLanguage = await getPreferedLanguage()
@@ -30,12 +38,10 @@ export const Route = createRootRoute({
       statusCode: 302,
     })
   },
-  loader: async (loader) => {
-    const language = loader.context?.currentLanguage || DEFAULT_LANGUAGE
-    const theme = await getPreferedTheme()
-
-    return { language, theme }
-  },
+  loader: async ({ context }) => ({
+    language: context?.currentLanguage || DEFAULT_LANGUAGE,
+    theme: context?.theme || 'system',
+  }),
   head: () => ({
     meta: [
       {
@@ -94,7 +100,8 @@ export const Route = createRootRoute({
       },
     ],
   }),
-
+  staleTime: 4 * 60 * 1000,
+  gcTime: 5 * 60 * 1000,
   component: RootComponent,
 })
 
@@ -102,7 +109,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const { language, theme } = Route.useLoaderData()
 
   return (
-    <html lang={language.locale} dir={language.direction} className={theme}>
+    <html lang={language.locale} dir={language.direction} data-theme={theme}>
       <head>
         <HeadContent />
       </head>

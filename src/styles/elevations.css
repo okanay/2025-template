@@ -1,0 +1,77 @@
+@theme {
+  --elevation-tint-opacity-1: 0.02;
+  --elevation-tint-opacity-2: 0.06;
+  --elevation-tint-opacity-3: 0.09;
+  --elevation-tint-opacity-4: 0.1;
+  --elevation-tint-opacity-5: 0.12;
+
+  --elevation-shadow-1:
+    0px 1px 3px 1px oklch(from var(--color-shadow) l c h / 0.15),
+    0px 1px 2px 0px oklch(from var(--color-shadow) l c h / 0.3);
+
+  --elevation-shadow-2:
+    0px 2px 6px 2px oklch(from var(--color-shadow) l c h / 0.15),
+    0px 1px 2px 0px oklch(from var(--color-shadow) l c h / 0.3);
+
+  --elevation-shadow-3:
+    0px 4px 8px 3px oklch(from var(--color-shadow) l c h / 0.15),
+    0px 1px 3px 0px oklch(from var(--color-shadow) l c h / 0.3);
+
+  --elevation-shadow-4:
+    0px 6px 10px 4px oklch(from var(--color-shadow) l c h / 0.15),
+    0px 2px 3px 0px oklch(from var(--color-shadow) l c h / 0.3);
+
+  --elevation-shadow-5:
+    0px 8px 12px 6px oklch(from var(--color-shadow) l c h / 0.15),
+    0px 4px 4px 0px oklch(from var(--color-shadow) l c h / 0.3);
+}
+
+@utility elevated-0 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: none;
+}
+
+@utility elevated-1 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: var(--elevation-shadow-1);
+  background-image: linear-gradient(
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-1)),
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-1))
+  );
+}
+
+@utility elevated-2 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: var(--elevation-shadow-2);
+  background-image: linear-gradient(
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-2)),
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-2))
+  );
+}
+
+@utility elevated-3 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: var(--elevation-shadow-3);
+  background-image: linear-gradient(
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-3)),
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-3))
+  );
+}
+
+@utility elevated-4 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: var(--elevation-shadow-4);
+  background-image: linear-gradient(
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-4)),
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-4))
+  );
+}
+
+@utility elevated-5 {
+  background-color: var(--color-surface-elevated);
+  box-shadow: var(--elevation-shadow-5);
+  background-image: linear-gradient(
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-5)),
+    oklch(from var(--color-primary) l c h / var(--elevation-tint-opacity-5))
+  );
+}
