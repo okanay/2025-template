@@ -28,10 +28,10 @@
 }
 
 @layer utilities {
-  .state-layer {
-    @apply relative isolate overflow-hidden;
+  .btn-state-layer {
+    @apply relative isolate overflow-hidden transition-all duration-500 ease-in-out hover:before:opacity-hover focus:scale-95 focus:before:opacity-focus active:scale-95 active:before:opacity-pressed;
   }
-  .state-layer::before {
+  .btn-state-layer::before {
     @apply absolute inset-0 bg-current opacity-0 transition-opacity duration-300 content-[''];
   }
 }
