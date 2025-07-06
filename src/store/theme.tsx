@@ -37,13 +37,17 @@ export function ThemeStore({ children, initialTheme }: Props) {
             Cookies.remove(THEME_COOKIE_KEY)
             localStorage.removeItem('theme')
             document.documentElement.removeAttribute('data-theme')
+            document.documentElement.removeAttribute('class')
 
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-            document.documentElement.setAttribute('data-theme', prefersDarkMode ? 'dark' : 'light')
+            const systemTheme = prefersDarkMode ? 'dark' : 'light'
+            document.documentElement.setAttribute('data-theme', systemTheme)
+            document.documentElement.className = systemTheme
           } else {
             Cookies.set(THEME_COOKIE_KEY, theme, { expires: THEME_COOKIE_DURATION })
             localStorage.setItem('theme', theme)
             document.documentElement.setAttribute('data-theme', theme)
+            document.documentElement.className = theme
           }
         },
       })),
@@ -58,11 +62,15 @@ export function ThemeStore({ children, initialTheme }: Props) {
       const rootElement = document.documentElement
 
       rootElement.removeAttribute('data-theme')
+      rootElement.removeAttribute('class')
 
       if (currentTheme === 'system') {
-        rootElement.setAttribute('data-theme', mediaQuery.matches ? 'dark' : 'light')
+        const systemTheme = mediaQuery.matches ? 'dark' : 'light'
+        rootElement.setAttribute('data-theme', systemTheme)
+        rootElement.className = systemTheme
       } else {
         rootElement.setAttribute('data-theme', currentTheme)
+        rootElement.className = currentTheme
       }
     }
 

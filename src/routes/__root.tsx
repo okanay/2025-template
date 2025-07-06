@@ -109,7 +109,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const { language, theme } = Route.useLoaderData()
 
   return (
-    <html lang={language.locale} dir={language.direction} data-theme={theme}>
+    <html lang={language.locale} dir={language.direction} data-theme={theme} className={theme}>
       <head>
         <HeadContent />
       </head>

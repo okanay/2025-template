@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default defineConfig({
-  logLevel: 'error',
+  logLevel: 'silent',
   base: '/',
   server: {
     port: 3000,
