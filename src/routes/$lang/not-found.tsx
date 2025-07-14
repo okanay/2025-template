@@ -26,4 +26,24 @@ export const CustomNotFoundPage = () => {
 
 export const Route = createFileRoute('/$lang/not-found')({
   component: CustomNotFoundPage,
+  head: () => {
+    return {
+      links: [
+        {
+          rel: 'preload',
+          as: 'font',
+          type: 'font/woff2',
+          crossOrigin: 'anonymous',
+          href: `/fonts/custom-sans/semibold.woff2`,
+        },
+        {
+          rel: 'preload',
+          as: 'font',
+          type: 'font/woff2',
+          crossOrigin: 'anonymous',
+          href: `/fonts/custom-sans/extra-bold.woff2`,
+        },
+      ],
+    }
+  },
 })
