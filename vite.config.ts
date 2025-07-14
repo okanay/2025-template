@@ -12,10 +12,13 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+
   plugins: [
     tailwindcss(),
     tsConfigPaths(),
     tanstackStart({
+      // @ts-ignore
+      // customViteReactPlugin: true,
       react: {
         babel: {
           plugins: [['babel-plugin-react-compiler', {}]],

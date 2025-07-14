@@ -17,19 +17,21 @@ const i18nConfig = (initialLanguage: LanguageValue = DEFAULT_LANGUAGE.value) => 
       .use(Backend)
       .use(initReactI18next)
       .init({
-        // resources: resource,
         lng: initialLanguage,
+        defaultNS: defaultNS,
+        ns: ns,
+        // resources: resource,
         backend: {
           loadPath: 'https://assets.hoi.com.tr/messages/{{lng}}/{{ns}}.json',
           crossDomain: true,
           requestOptions: {
             cache: 'default',
+            expirationTime: 7 * 24 * 60 * 60 * 1000,
           },
         },
         fallbackLng: FALLBACK_LANGUAGE.value,
         supportedLngs: LANGUAGES_VALUES,
-        defaultNS: defaultNS,
-        ns: ns,
+
         interpolation: {
           escapeValue: false,
         },

@@ -12,6 +12,10 @@ wrangler.toml
 *.local
 *.log*
 
+# Example Project
+go-github-updater
+
+
 # Dist
 node_modules/
 dist/

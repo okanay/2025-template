@@ -1,9 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'src/i18n/link'
 
 export const CustomNotFoundPage = () => {
   const { t } = useTranslation('not-found')
+  const router = useRouter()
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background text-on-background">
@@ -13,18 +14,20 @@ export const CustomNotFoundPage = () => {
         <p className="mt-2 mb-6 text-xl font-semibold text-on-surface-variant">
           {t('description')}
         </p>
-        <Link
-          to="/$lang"
+        <button
+          onClick={() => router.invalidate()}
           className={`state-layer inline-flex h-16 w-32 items-center justify-center overflow-hidden rounded-full bg-secondary-container text-lg font-medium tracking-wide text-on-secondary-container transition-transform duration-500 hover:before:opacity-hover focus:before:opacity-focus active:scale-95 active:before:opacity-pressed`}
         >
           {t('return-link')}
-        </Link>
+        </button>
       </div>
     </main>
   )
 }
 
 export const Route = createFileRoute('/$lang/not-found')({
+  staleTime: 0,
+  gcTime: 0,
   component: CustomNotFoundPage,
   head: () => {
     return {
