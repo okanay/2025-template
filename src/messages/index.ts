@@ -4,22 +4,22 @@ import translationEN from './en/translation.json'
 import commonTR from './tr/common.json'
 import commonEN from './en/common.json'
 
-import notFoundTR from './tr/not-found.json'
-import notFoundEN from './en/not-found.json'
+import notFoundTR from './tr/globals.json'
+import notFoundEN from './en/globals.json'
 
 export const defaultNS = 'translation'
-export const ns = ['translation', 'common', 'not-found']
+export const ns = ['translation', 'common', 'globals']
 
 const resource = {
   tr: {
     translation: translationTR,
     common: commonTR,
-    'not-found': notFoundTR,
+    globals: notFoundTR,
   },
   en: {
     translation: translationEN,
     common: commonEN,
-    'not-found': notFoundEN,
+    globals: notFoundEN,
   },
 }
 

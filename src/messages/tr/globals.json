@@ -1,0 +1,12 @@
+{
+  "not-found": {
+    "title": "Sayfa Bulunamadı",
+    "description": "Aradığınız sayfa bulunamadı. Bu programatik olarak güncellendi.",
+    "return-link": "Ana Sayfaya Git"
+  },
+  "error": {
+    "title": "Bir Hata Oluştu",
+    "description": "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "return-link": "Ana Sayfaya Git"
+  }
+}

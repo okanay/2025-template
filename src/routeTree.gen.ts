@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangNotFoundRouteImport } from './routes/$lang/not-found'
+import { Route as LangErrorRouteImport } from './routes/$lang/error'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
 import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
 import { ServerRoute as RobotsDottxtServerRouteImport } from './routes/robots[.]txt'
@@ -35,6 +36,11 @@ const LangNotFoundRoute = LangNotFoundRouteImport.update({
   path: '/$lang/not-found',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangErrorRoute = LangErrorRouteImport.update({
+  id: '/$lang/error',
+  path: '/$lang/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangAboutRoute = LangAboutRouteImport.update({
   id: '/$lang/about',
   path: '/$lang/about',
@@ -54,12 +60,14 @@ const RobotsDottxtServerRoute = RobotsDottxtServerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
   '/$lang': typeof LangIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
   '/$lang': typeof LangIndexRoute
 }
@@ -67,20 +75,33 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
   '/$lang/': typeof LangIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$lang/about' | '/$lang/not-found' | '/$lang'
+  fullPaths:
+    | '/'
+    | '/$lang/about'
+    | '/$lang/error'
+    | '/$lang/not-found'
+    | '/$lang'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$lang/about' | '/$lang/not-found' | '/$lang'
-  id: '__root__' | '/' | '/$lang/about' | '/$lang/not-found' | '/$lang/'
+  to: '/' | '/$lang/about' | '/$lang/error' | '/$lang/not-found' | '/$lang'
+  id:
+    | '__root__'
+    | '/'
+    | '/$lang/about'
+    | '/$lang/error'
+    | '/$lang/not-found'
+    | '/$lang/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangAboutRoute: typeof LangAboutRoute
+  LangErrorRoute: typeof LangErrorRoute
   LangNotFoundRoute: typeof LangNotFoundRoute
   LangIndexRoute: typeof LangIndexRoute
 }
@@ -133,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangNotFoundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/error': {
+      id: '/$lang/error'
+      path: '/$lang/error'
+      fullPath: '/$lang/error'
+      preLoaderRoute: typeof LangErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$lang/about': {
       id: '/$lang/about'
       path: '/$lang/about'
@@ -164,6 +192,7 @@ declare module '@tanstack/react-start/server' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangAboutRoute: LangAboutRoute,
+  LangErrorRoute: LangErrorRoute,
   LangNotFoundRoute: LangNotFoundRoute,
   LangIndexRoute: LangIndexRoute,
 }
