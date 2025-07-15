@@ -36,7 +36,7 @@ export function EditFile() {
   // Load file on mount or when search params change
   useEffect(() => {
     loadFile(search.lang, search.ns)
-  }, [search.lang, search.ns, loadFile])
+  }, [])
 
   const handleSave = async () => {
     try {

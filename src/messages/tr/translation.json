@@ -1,3 +1,376 @@
 {
-  "title" : "test"
+  "_meta": {
+    "type": "global",
+    "_schemaVersion": "1.2.0",
+    "_locale": "tr-TR",
+    "_lastModified": "2025-01-16T10:30:00Z"
+  },
+  "site_meta": {
+    "_meta": {
+      "type": "section",
+      "label": "Site Meta Bilgileri",
+      "icon": "🌐",
+      "collapsed": false,
+      "description": "Sitenin genel meta verilerini düzenleyin"
+    },
+    "title": "Muhteşem E-ticaret Sitesi",
+    "_title": {
+      "type": "text",
+      "label": "Site Başlığı",
+      "placeholder": "Sitenizin ana başlığını girin",
+      "required": true,
+      "minLength": 5,
+      "maxLength": 60,
+      "hint": "SEO için önemli, 60 karakteri geçmeyin",
+      "validationMessages": {
+        "required": "Site başlığı zorunludur",
+        "minLength": "En az 5 karakter olmalı",
+        "maxLength": "60 karakteri geçmemelidir"
+      }
+    },
+    "description": "En iyi ürünleri en uygun fiyatlarla. Güvenli alışverişin adresi. Hızlı kargo, kolay iade ve 7/24 müşteri hizmetleri ile yanınızdayız.",
+    "_description": {
+      "type": "textarea",
+      "label": "Site Açıklaması",
+      "placeholder": "Sitenizi kısaca tanıtın...",
+      "required": true,
+      "minLength": 50,
+      "maxLength": 160,
+      "hint": "Meta description için ideal uzunluk 150-160 karakter"
+    },
+    "author_email": "info@muhtesemsitesi.com",
+    "_author_email": {
+      "type": "email",
+      "label": "İletişim E-postası",
+      "placeholder": "ornek@domain.com",
+      "required": true,
+      "pattern": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+      "validationMessages": {
+        "pattern": "Geçerli bir e-posta adresi girin"
+      }
+    },
+    "website_url": "https://www.muhtesemsitesi.com",
+    "_website_url": {
+      "type": "url",
+      "label": "Website URL",
+      "placeholder": "https://example.com",
+      "required": true
+    },
+    "is_maintenance": false,
+    "_is_maintenance": {
+      "type": "boolean",
+      "label": "Bakım Modu",
+      "description": "Aktif edildiğinde site bakım sayfasını gösterir",
+      "hint": "Güncellemeler sırasında kullanın"
+    }
+  },
+  "user_preferences": {
+    "_meta": {
+      "type": "section",
+      "label": "Kullanıcı Tercihleri",
+      "icon": "👤",
+      "collapsed": true
+    },
+    "default_language": "tr",
+    "_default_language": {
+      "type": "select",
+      "label": "Varsayılan Dil",
+      "options": [
+        { "label": "Türkçe", "value": "tr" },
+        { "label": "English", "value": "en" },
+        { "label": "العربية", "value": "ar" },
+        { "label": "Français", "value": "fr" }
+      ],
+      "required": true,
+      "hint": "Yeni kullanıcılar için varsayılan dil"
+    },
+    "theme_preference": "auto",
+    "_theme_preference": {
+      "type": "radio",
+      "label": "Tema Tercihi",
+      "options": ["light", "dark", "auto"],
+      "hint": "Auto sisteminizin temasını takip eder"
+    },
+    "max_cart_items": 50,
+    "_max_cart_items": {
+      "type": "number",
+      "label": "Maksimum Sepet Ürün Sayısı",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "hint": "Bir sepette bulunabilecek maksimum ürün adedi"
+    }
+  },
+  "features": {
+    "_meta": {
+      "type": "section",
+      "label": "Özellikler",
+      "icon": "⚡",
+      "collapsed": false
+    },
+    "feature_list": [
+      {
+        "title": "Hızlı Kargo",
+        "description": "24 saat içinde kapınızda",
+        "icon": "🚚",
+        "priority": 1,
+        "is_active": true,
+        "launch_date": "2024-01-15"
+      },
+      {
+        "title": "Güvenli Ödeme",
+        "description": "SSL sertifikalı güvenli ödeme sistemi",
+        "icon": "🔒",
+        "priority": 2,
+        "is_active": true,
+        "launch_date": "2024-01-10"
+      },
+      {
+        "title": "7/24 Destek",
+        "description": "Her zaman yanınızdayız",
+        "icon": "💬",
+        "priority": 3,
+        "is_active": false,
+        "launch_date": "2024-03-01"
+      }
+    ],
+    "_feature_list": {
+      "type": "repeater",
+      "label": "Özellik Listesi",
+      "addButton": "Yeni Özellik Ekle",
+      "min": 1,
+      "max": 10,
+      "reorderable": true,
+      "openable": true,
+      "itemLabel": "{{fields.title}} - {{fields.icon}}",
+      "hint": "Site özelliklerinizi buradan yönetebilirsiniz",
+      "fields": {
+        "title": {
+          "type": "text",
+          "label": "Özellik Başlığı",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 50,
+          "placeholder": "Örn: Hızlı Teslimat"
+        },
+        "description": {
+          "type": "textarea",
+          "label": "Açıklama",
+          "required": true,
+          "maxLength": 200,
+          "placeholder": "Bu özelliği kısaca açıklayın..."
+        },
+        "icon": {
+          "type": "text",
+          "label": "İkon (Emoji)",
+          "placeholder": "🚀",
+          "hint": "Bir emoji seçin"
+        },
+        "priority": {
+          "type": "number",
+          "label": "Öncelik Sırası",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "hint": "1 en yüksek öncelik"
+        },
+        "is_active": {
+          "type": "boolean",
+          "label": "Aktif",
+          "description": "Bu özellik sitede gösterilsin mi?"
+        },
+        "launch_date": {
+          "type": "date",
+          "label": "Başlangıç Tarihi",
+          "hint": "Bu özelliğin yayına çıkacağı tarih"
+        }
+      }
+    }
+  },
+  "product_settings": {
+    "_meta": {
+      "type": "section",
+      "label": "Ürün Ayarları",
+      "icon": "📦",
+      "collapsed": true
+    },
+    "categories": ["Elektronik", "Giyim", "Ev & Yaşam", "Spor & Outdoor", "Kitap & Hobi"],
+    "_categories": {
+      "type": "repeater",
+      "label": "Ürün Kategorileri",
+      "addButton": "Kategori Ekle",
+      "min": 1,
+      "reorderable": true,
+      "hint": "Ürün kategorilerinizi yönetin",
+      "fields": {
+        "name": {
+          "type": "text",
+          "label": "Kategori Adı",
+          "required": true
+        }
+      }
+    },
+    "currency": "TRY",
+    "_currency": {
+      "type": "select",
+      "label": "Para Birimi",
+      "options": [
+        { "label": "Türk Lirası (₺)", "value": "TRY" },
+        { "label": "US Dollar ($)", "value": "USD" },
+        { "label": "Euro (€)", "value": "EUR" },
+        { "label": "British Pound (£)", "value": "GBP" }
+      ],
+      "required": true
+    }
+  },
+  "notifications": {
+    "_meta": {
+      "type": "section",
+      "label": "Bildirimler",
+      "icon": "🔔",
+      "collapsed": true
+    },
+    "order_status_messages": {
+      "pending": "Siparişiniz alındı, hazırlanıyor.",
+      "processing": "Siparişiniz hazırlanıyor.",
+      "shipped": "Siparişiniz kargoya verildi.",
+      "delivered": "Siparişiniz teslim edildi."
+    },
+    "_order_status_messages": {
+      "type": "contextual",
+      "label": "Sipariş Durum Mesajları",
+      "context_key": "status",
+      "contexts": ["pending", "processing", "shipped", "delivered"],
+      "variables": ["order_id", "customer_name", "tracking_number"],
+      "hint": "Her sipariş durumu için özel mesaj yazabilirsiniz"
+    },
+    "stock_alert_message": "Bu üründen sadece {count} adet kaldı!",
+    "_stock_alert_message": {
+      "type": "plural",
+      "label": "Stok Uyarı Mesajı",
+      "variable": "count",
+      "hint": "Stok azaldığında gösterilecek mesaj. {count} değişkenini kullanabilirsiniz"
+    }
+  },
+  "design_settings": {
+    "_meta": {
+      "type": "section",
+      "label": "Tasarım Ayarları",
+      "icon": "🎨",
+      "collapsed": true
+    },
+    "primary_color": "#3B82F6",
+    "_primary_color": {
+      "type": "color",
+      "label": "Ana Renk",
+      "hint": "Sitenizin ana tema rengi"
+    },
+    "secondary_color": "#10B981",
+    "_secondary_color": {
+      "type": "color",
+      "label": "İkincil Renk",
+      "hint": "Vurgu ve detaylar için kullanılır"
+    },
+    "logo_upload": "/assets/logo.png",
+    "_logo_upload": {
+      "type": "media",
+      "label": "Logo Yükle",
+      "accept": "image/png, image/jpeg, image/svg+xml",
+      "maxSize": "2MB",
+      "hint": "SVG formatı önerilir, maksimum 2MB"
+    },
+    "hero_background": "/assets/hero-bg.jpg",
+    "_hero_background": {
+      "type": "media",
+      "label": "Ana Sayfa Arkaplan",
+      "accept": "image/*",
+      "maxSize": "5MB",
+      "hint": "1920x1080 çözünürlük önerilir"
+    }
+  },
+  "advanced_config": {
+    "_meta": {
+      "type": "section",
+      "label": "Gelişmiş Yapılandırma",
+      "icon": "⚙️",
+      "collapsed": true
+    },
+    "api_settings": {
+      "_meta": {
+        "type": "object",
+        "label": "API Ayarları",
+        "description": "Üçüncü parti API entegrasyonları"
+      },
+      "payment_gateway": {
+        "provider": "stripe",
+        "test_mode": true,
+        "webhook_url": "https://api.muhtesemsitesi.com/webhooks/payment"
+      },
+      "_payment_gateway": {
+        "type": "object",
+        "fields": {
+          "provider": {
+            "type": "select",
+            "label": "Ödeme Sağlayıcısı",
+            "options": [
+              { "label": "Stripe", "value": "stripe" },
+              { "label": "PayPal", "value": "paypal" },
+              { "label": "Iyzico", "value": "iyzico" }
+            ]
+          },
+          "test_mode": {
+            "type": "boolean",
+            "label": "Test Modu",
+            "description": "Gerçek ödeme almaz, sadece test"
+          },
+          "webhook_url": {
+            "type": "url",
+            "label": "Webhook URL",
+            "placeholder": "https://example.com/webhook"
+          }
+        }
+      },
+      "analytics": {
+        "google_analytics_id": "GA-XXXXXXXXXX",
+        "facebook_pixel_id": "123456789",
+        "enable_heatmaps": false
+      },
+      "_analytics": {
+        "type": "object",
+        "fields": {
+          "google_analytics_id": {
+            "type": "text",
+            "label": "Google Analytics ID",
+            "placeholder": "GA-XXXXXXXXXX",
+            "pattern": "^GA-[A-Z0-9-]+$"
+          },
+          "facebook_pixel_id": {
+            "type": "text",
+            "label": "Facebook Pixel ID",
+            "placeholder": "123456789"
+          },
+          "enable_heatmaps": {
+            "type": "boolean",
+            "label": "Heatmap Aktif",
+            "description": "Kullanıcı davranış analizi için"
+          }
+        }
+      }
+    },
+    "cache_duration": 3600,
+    "_cache_duration": {
+      "type": "number",
+      "label": "Önbellek Süresi (saniye)",
+      "min": 60,
+      "max": 86400,
+      "step": 60,
+      "hint": "3600 saniye = 1 saat"
+    },
+    "maintenance_end_time": "2024-12-31T23:59:59Z",
+    "_maintenance_end_time": {
+      "type": "datetime",
+      "label": "Bakım Bitiş Zamanı",
+      "hint": "ISO 8601 formatında tarih ve saat"
+    }
+  }
 }
