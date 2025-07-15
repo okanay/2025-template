@@ -166,14 +166,16 @@ const FormField = ({
   children: React.ReactNode
 }) => {
   return (
-    <div className="flex w-full flex-col">
+    <div className="my-2 flex w-full flex-col gap-y-1">
       <label className="text-title-small font-normal text-on-surface-variant">{meta.label}</label>
       {children}
-      <div className="min-h-[1rem] px-1">
+      <div className="min-h-fit px-1">
         {error ? (
           <p className="text-label-medium text-error">{error}</p>
         ) : meta.hint ? (
-          <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
+          <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
+            <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
+          </div>
         ) : null}
       </div>
     </div>
@@ -214,7 +216,10 @@ const RepeaterComponent = ({
     <FormField meta={meta}>
       <div className="flex flex-col rounded-lg border border-outline/20 bg-surface-container-lowest px-3 pt-3">
         {(items || []).map((item, index) => (
-          <div key={index} className="relative rounded-md border border-outline/20 bg-surface p-3">
+          <div
+            key={index}
+            className="relative mb-4 rounded-md border border-outline/20 bg-surface p-3"
+          >
             <button
               onClick={() => handleRemoveItem(index)}
               title="Bu elemanı sil"
@@ -222,7 +227,7 @@ const RepeaterComponent = ({
             >
               <TrashIcon size={16} />
             </button>
-            <div className="flex flex-col gap-y-4 px-4">
+            <div className="flex flex-col px-1">
               {Object.keys(meta.fields).map((fieldKey) => (
                 <I18nInputMode
                   key={fieldKey}
@@ -255,9 +260,9 @@ const DefaultRepeater = ({
   path: (string | number)[]
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="mb-4 flex flex-col">
       <label className="text-label-large font-medium text-on-surface-variant">{label}</label>
-      <div className="flex flex-col gap-y-4 rounded-lg border border-outline/30 p-4">
+      <div className="flex flex-col rounded-lg border border-outline/30 p-4">
         {items.map((item, index) => (
           <I18nInputMode
             key={index}
@@ -283,16 +288,20 @@ const SectionComponent = ({
   return (
     <details
       open={!meta.collapsed}
-      className="group overflow-hidden rounded-xl border border-outline/20"
+      className="group mb-8 overflow-hidden rounded-xl border border-outline/20"
     >
       <summary className="flex cursor-pointer items-center bg-surface-container px-4 py-3 hover:bg-surface-container-high">
-        {meta.icon && <span className="text-lg opacity-80">{meta.icon}</span>}
+        <div className="flex flex-row items-start">
+          {meta.icon && (
+            <span className="mt-0.5 mr-2 text-title-small opacity-80">{meta.icon}</span>
+          )}
+        </div>
         <h2 className="text-title-medium font-semibold text-on-surface">{meta.label}</h2>
         <span className="ml-auto text-on-surface-variant transition-transform group-open:rotate-180">
           <ChevronDownIcon size={20} />
         </span>
       </summary>
-      <div className="flex flex-col gap-y-4 border-t border-outline/20 bg-surface-container-lowest p-4">
+      <div className="flex flex-col border-t border-outline/20 bg-surface-container-lowest p-4">
         {Object.keys(data).map((fieldKey) => {
           if (fieldKey.startsWith('_')) return null
           return (
@@ -394,7 +403,7 @@ const BooleanToggle = ({
       </button>
     </div>
     {meta.hint && (
-      <div className="min-h-fit px-1 pt-1.5">
+      <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
         <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
       </div>
     )}

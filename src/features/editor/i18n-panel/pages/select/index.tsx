@@ -309,7 +309,7 @@ const FileCard = ({
           <div className="flex items-center gap-4">
             {/* Enhanced Icon Container */}
             <div
-              className={`flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 ${styling.iconBgClass} group-hover:scale-105 group-hover:shadow-md`}
+              className={`flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 ${styling.iconBgClass}`}
             >
               <Icon className={`${styling.iconTextClass} transition-all duration-300`} size={28} />
             </div>
@@ -341,7 +341,7 @@ const FileCard = ({
         {/* Bottom Status Bar */}
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-7 w-12 items-center justify-center rounded-md bg-surface-container">
+            <div className="flex h-7 w-12 items-center justify-center rounded-md bg-surface">
               <span className="text-xs font-medium text-on-surface-variant">
                 {language.toUpperCase()}
               </span>
