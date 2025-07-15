@@ -4,8 +4,8 @@ import translationEN from './en/translation.json'
 import commonTR from './tr/common.json'
 import commonEN from './en/common.json'
 
-import notFoundTR from './tr/globals.json'
-import notFoundEN from './en/globals.json'
+import errorPagesTR from './tr/error-pages.json'
+import errorPagesEN from './en/error-pages.json'
 
 import seoTR from './tr/seo.json'
 import seoEN from './en/seo.json'
@@ -25,13 +25,13 @@ const resource = {
   tr: {
     translation: translationTR,
     common: commonTR,
-    globals: notFoundTR,
+    globals: errorPagesTR,
     seo: seoTR,
   },
   en: {
     translation: translationEN,
     common: commonEN,
-    globals: notFoundEN,
+    globals: errorPagesEN,
     seo: seoEN,
   },
 }
