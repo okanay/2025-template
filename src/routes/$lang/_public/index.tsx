@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useTheme } from 'src/store/theme'
 
-export const Route = createFileRoute('/$lang/')({
+export const Route = createFileRoute('/$lang/_public/')({
   component: HomePage,
 })
 

@@ -37,4 +37,28 @@
   .btn-state-layer::after {
     @apply absolute inset-0 rounded-[inherit] bg-transparent opacity-100 transition-opacity duration-300 content-[''];
   }
+
+  .input-base {
+    @apply w-full rounded-md border bg-surface p-2 text-body-medium text-on-surface transition-colors duration-200 placeholder:text-on-surface-variant/50 focus:border-primary focus:bg-surface-container-low focus:ring-2 focus:ring-primary/20 focus:outline-none;
+  }
+
+  .zen-hide {
+    /* Zen modu kapalıyken normal görünür */
+    visibility: visible;
+    opacity: 1;
+    max-height: 1000px; /* İçeriğin sığabileceği büyük bir değer */
+    transition-property: opacity, max-height, visibility;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+
+  /* Ana kapsayıcıda data-zen-mode="true" olduğunda .zen-hide'ı gizle */
+  [data-zen-mode='true'] .zen-hide {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
 }

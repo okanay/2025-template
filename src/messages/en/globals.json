@@ -1,12 +1,12 @@
 {
   "not-found": {
     "title": "Page Not Found",
-    "description": "The page you are looking for could not be found. This was updated programmatically.",
+    "description": "The page you are looking for could not be found. Please check the address and try again.",
     "return-link": "Go to Homepage"
   },
   "error": {
     "title": "An Error Occurred",
-    "description": "An unexpected error occurred. Please try again later.",
+    "description": "An unexpected error occurred. Please try again later or contact us.",
     "return-link": "Go to Homepage"
   }
 }

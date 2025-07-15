@@ -12,10 +12,13 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangNotFoundRouteImport } from './routes/$lang/not-found'
 import { Route as LangErrorRouteImport } from './routes/$lang/error'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
+import { Route as LangPublicIndexRouteImport } from './routes/$lang/_public/index'
+import { Route as LangAuthEditorRouteRouteImport } from './routes/$lang/_auth/editor.route'
+import { Route as LangAuthEditorIndexRouteImport } from './routes/$lang/_auth/editor.index'
+import { Route as LangAuthEditorI18nRouteImport } from './routes/$lang/_auth/editor.i18n'
 import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
 import { ServerRoute as RobotsDottxtServerRouteImport } from './routes/robots[.]txt'
 
@@ -24,11 +27,6 @@ const rootServerRouteImport = createServerRootRoute()
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LangIndexRoute = LangIndexRouteImport.update({
-  id: '/$lang/',
-  path: '/$lang/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangNotFoundRoute = LangNotFoundRouteImport.update({
@@ -46,6 +44,26 @@ const LangAboutRoute = LangAboutRouteImport.update({
   path: '/$lang/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangPublicIndexRoute = LangPublicIndexRouteImport.update({
+  id: '/$lang/_public/',
+  path: '/$lang/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangAuthEditorRouteRoute = LangAuthEditorRouteRouteImport.update({
+  id: '/$lang/_auth/editor',
+  path: '/$lang/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangAuthEditorIndexRoute = LangAuthEditorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LangAuthEditorRouteRoute,
+} as any)
+const LangAuthEditorI18nRoute = LangAuthEditorI18nRouteImport.update({
+  id: '/i18n',
+  path: '/i18n',
+  getParentRoute: () => LangAuthEditorRouteRoute,
+} as any)
 const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -62,14 +80,19 @@ export interface FileRoutesByFullPath {
   '/$lang/about': typeof LangAboutRoute
   '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
-  '/$lang': typeof LangIndexRoute
+  '/$lang/editor': typeof LangAuthEditorRouteRouteWithChildren
+  '/$lang': typeof LangPublicIndexRoute
+  '/$lang/editor/i18n': typeof LangAuthEditorI18nRoute
+  '/$lang/editor/': typeof LangAuthEditorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
-  '/$lang': typeof LangIndexRoute
+  '/$lang': typeof LangPublicIndexRoute
+  '/$lang/editor/i18n': typeof LangAuthEditorI18nRoute
+  '/$lang/editor': typeof LangAuthEditorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,7 +100,10 @@ export interface FileRoutesById {
   '/$lang/about': typeof LangAboutRoute
   '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
-  '/$lang/': typeof LangIndexRoute
+  '/$lang/_auth/editor': typeof LangAuthEditorRouteRouteWithChildren
+  '/$lang/_public/': typeof LangPublicIndexRoute
+  '/$lang/_auth/editor/i18n': typeof LangAuthEditorI18nRoute
+  '/$lang/_auth/editor/': typeof LangAuthEditorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -86,16 +112,29 @@ export interface FileRouteTypes {
     | '/$lang/about'
     | '/$lang/error'
     | '/$lang/not-found'
+    | '/$lang/editor'
     | '/$lang'
+    | '/$lang/editor/i18n'
+    | '/$lang/editor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$lang/about' | '/$lang/error' | '/$lang/not-found' | '/$lang'
+  to:
+    | '/'
+    | '/$lang/about'
+    | '/$lang/error'
+    | '/$lang/not-found'
+    | '/$lang'
+    | '/$lang/editor/i18n'
+    | '/$lang/editor'
   id:
     | '__root__'
     | '/'
     | '/$lang/about'
     | '/$lang/error'
     | '/$lang/not-found'
-    | '/$lang/'
+    | '/$lang/_auth/editor'
+    | '/$lang/_public/'
+    | '/$lang/_auth/editor/i18n'
+    | '/$lang/_auth/editor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,7 +142,8 @@ export interface RootRouteChildren {
   LangAboutRoute: typeof LangAboutRoute
   LangErrorRoute: typeof LangErrorRoute
   LangNotFoundRoute: typeof LangNotFoundRoute
-  LangIndexRoute: typeof LangIndexRoute
+  LangAuthEditorRouteRoute: typeof LangAuthEditorRouteRouteWithChildren
+  LangPublicIndexRoute: typeof LangPublicIndexRoute
 }
 export interface FileServerRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtServerRoute
@@ -140,13 +180,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$lang/': {
-      id: '/$lang/'
-      path: '/$lang'
-      fullPath: '/$lang'
-      preLoaderRoute: typeof LangIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$lang/not-found': {
       id: '/$lang/not-found'
       path: '/$lang/not-found'
@@ -167,6 +200,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang/about'
       preLoaderRoute: typeof LangAboutRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$lang/_public/': {
+      id: '/$lang/_public/'
+      path: '/$lang'
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangPublicIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/_auth/editor': {
+      id: '/$lang/_auth/editor'
+      path: '/$lang/editor'
+      fullPath: '/$lang/editor'
+      preLoaderRoute: typeof LangAuthEditorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/_auth/editor/': {
+      id: '/$lang/_auth/editor/'
+      path: '/'
+      fullPath: '/$lang/editor/'
+      preLoaderRoute: typeof LangAuthEditorIndexRouteImport
+      parentRoute: typeof LangAuthEditorRouteRoute
+    }
+    '/$lang/_auth/editor/i18n': {
+      id: '/$lang/_auth/editor/i18n'
+      path: '/i18n'
+      fullPath: '/$lang/editor/i18n'
+      preLoaderRoute: typeof LangAuthEditorI18nRouteImport
+      parentRoute: typeof LangAuthEditorRouteRoute
     }
   }
 }
@@ -189,12 +250,26 @@ declare module '@tanstack/react-start/server' {
   }
 }
 
+interface LangAuthEditorRouteRouteChildren {
+  LangAuthEditorI18nRoute: typeof LangAuthEditorI18nRoute
+  LangAuthEditorIndexRoute: typeof LangAuthEditorIndexRoute
+}
+
+const LangAuthEditorRouteRouteChildren: LangAuthEditorRouteRouteChildren = {
+  LangAuthEditorI18nRoute: LangAuthEditorI18nRoute,
+  LangAuthEditorIndexRoute: LangAuthEditorIndexRoute,
+}
+
+const LangAuthEditorRouteRouteWithChildren =
+  LangAuthEditorRouteRoute._addFileChildren(LangAuthEditorRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangAboutRoute: LangAboutRoute,
   LangErrorRoute: LangErrorRoute,
   LangNotFoundRoute: LangNotFoundRoute,
-  LangIndexRoute: LangIndexRoute,
+  LangAuthEditorRouteRoute: LangAuthEditorRouteRouteWithChildren,
+  LangPublicIndexRoute: LangPublicIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

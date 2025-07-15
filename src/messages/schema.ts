@@ -6,6 +6,13 @@ export type SelectOption = {
   value: string | number
 }
 
+export interface GlobalMeta extends BaseMeta {
+  type: 'global'
+  _schemaVersion?: string
+  _locale?: string
+  _lastModified?: string
+}
+
 //==========================================================================
 // TEMEL META TİPLERİ (BASE TYPES)
 //==========================================================================
@@ -214,6 +221,7 @@ export interface ContextualMeta extends BaseMeta {
  * Bu, projemizdeki tüm meta kurallarını kapsayan ana tiptir.
  */
 export type AllMetaTypes =
+  | GlobalMeta
   | SectionMeta
   | TextMeta
   | TextareaMeta
