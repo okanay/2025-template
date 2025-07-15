@@ -178,6 +178,7 @@ export function EditFileStoreI18n({ children }: Props) {
         setViewMode: (mode: 'ui' | 'json') => {
           set((state) => {
             state.viewMode = mode
+
             // Sync JSON text when switching away from JSON mode
             if (mode !== 'json') {
               state.jsonEditText = JSON.stringify(state.i18nData, null, 2)

@@ -1,4 +1,4 @@
-import { ChevronDownIcon, TrashIcon } from 'lucide-react'
+import { ChevronDownIcon, TrashIcon, PlusIcon } from 'lucide-react'
 import {
   AllMetaTypes,
   BaseMeta,
@@ -180,11 +180,20 @@ export const I18nInputMode = ({
     default:
       if (fieldMeta) {
         return (
-          <div className="my-2 flex flex-col rounded-md bg-on-error-container p-3 text-error-container">
-            <span className="text-title-medium">{fieldMeta.label || fieldKey}</span>
-            <span className="text-title-small">
-              ({fieldMeta.type}) react component daha hazır değil.
-            </span>
+          <div className="my-3 rounded-xl border border-error/20 bg-error-container/10 p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-error text-on-error">
+                <span className="text-label-medium">⚠</span>
+              </div>
+              <div className="flex-1">
+                <div className="text-title-small font-medium text-error">
+                  {fieldMeta.label || fieldKey}
+                </div>
+                <div className="text-body-small text-error/70">
+                  ({fieldMeta.type}) türü için React bileşeni henüz hazır değil.
+                </div>
+              </div>
+            </div>
           </div>
         )
       }
@@ -193,34 +202,112 @@ export const I18nInputMode = ({
 }
 
 //==========================================================================
-// YARDIMCI & YAPISAL BİLEŞENLER
+// TEMEL WRAPPER VE YARDIMCI BİLEŞENLER
 //==========================================================================
 
 const FormField = ({
   meta,
   error,
   children,
+  className = '',
 }: {
   meta: BaseMeta
   error?: string | null
   children: React.ReactNode
+  className?: string
 }) => {
   return (
-    <div className="my-2 flex w-full flex-col gap-y-1">
-      <label className="text-label-large text-on-surface-variant">{meta.label}</label>
-      {children}
-      <div className="min-h-fit px-1">
+    <div className={`space-y-2 ${className}`}>
+      <label className="block text-body-medium font-medium text-on-surface">{meta.label}</label>
+
+      <div className="relative">{children}</div>
+
+      {/* Error & Hint Messages */}
+      <div className="min-h-fit">
         {error ? (
-          <p className="text-label-medium text-error">{error}</p>
+          <div className="flex items-center gap-2 text-body-small text-error">
+            <span className="text-xs">●</span>
+            <span>{error}</span>
+          </div>
         ) : meta.hint ? (
-          <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
-            <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
+          <div className="flex items-center gap-2 text-body-small text-on-surface-variant">
+            <span className="text-xs">💡</span>
+            <span>{meta.hint}</span>
           </div>
         ) : null}
       </div>
     </div>
   )
 }
+
+const Card = ({
+  children,
+  className = '',
+  elevation = 1,
+}: {
+  children: React.ReactNode
+  className?: string
+  elevation?: 0 | 1 | 2 | 3 | 4 | 5
+}) => {
+  return (
+    <div
+      className={`mb-6 rounded-xl border border-surface-container-highest bg-surface ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+const Button = ({
+  children,
+  onClick,
+  variant = 'filled',
+  size = 'medium',
+  disabled = false,
+  className = '',
+  type = 'button',
+  ...props
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  variant?: 'filled' | 'outlined' | 'text' | 'tonal'
+  size?: 'small' | 'medium' | 'large'
+  disabled?: boolean
+  className?: string
+  type?: 'button' | 'submit' | 'reset'
+}) => {
+  const baseClasses =
+    'btn-state-layer inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-disabled'
+
+  const sizeClasses = {
+    small: 'px-3 py-1.5 text-label-medium min-h-8',
+    medium: 'px-6 py-2.5 text-label-large min-h-10',
+    large: 'px-8 py-3 text-title-small min-h-12',
+  }
+
+  const variantClasses = {
+    filled: 'bg-primary text-on-primary shadow-sm hover:shadow-md',
+    outlined: 'border border-outline bg-surface text-primary hover:bg-primary/hover',
+    text: 'text-primary hover:bg-primary/hover',
+    tonal: 'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80',
+  }
+
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
+
+//==========================================================================
+// KONTEYNER BİLEŞENLERİ
+//==========================================================================
 
 const RepeaterComponent = ({
   meta,
@@ -253,39 +340,61 @@ const RepeaterComponent = ({
   }
 
   return (
-    <FormField meta={meta}>
-      <div className="flex flex-col rounded-lg border border-outline/20 bg-surface-container-lowest px-3 pt-3">
-        {(items || []).map((item, index) => (
-          <div
-            key={index}
-            className="relative mb-4 rounded-md border border-outline/20 bg-surface p-3"
-          >
-            <button
-              onClick={() => handleRemoveItem(index)}
-              title="Bu elemanı sil"
-              className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full text-on-surface-variant/50 transition-colors hover:bg-error-container hover:text-on-error-container"
-            >
-              <TrashIcon size={16} />
-            </button>
-            <div className="flex flex-col px-1">
-              {Object.keys(meta.fields).map((fieldKey) => (
-                <I18nInputMode
-                  key={fieldKey}
-                  path={[...path, index, fieldKey]}
-                  fieldValue={item[fieldKey]}
-                  fieldMeta={meta.fields[fieldKey]}
-                />
-              ))}
+    <FormField meta={meta} className="space-y-4">
+      <Card className="space-y-4 p-6">
+        {/* Repeater Header */}
+        <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
+              <span className="text-label-medium font-bold">{(items || []).length}</span>
+            </div>
+            <span className="text-title-small font-medium text-on-surface">Öğeler</span>
+          </div>
+
+          <Button onClick={handleAddItem} variant="tonal" size="small" className="gap-1">
+            <PlusIcon size={16} />
+            {meta.addButton || 'Yeni Ekle'}
+          </Button>
+        </div>
+
+        {/* Repeater Items */}
+        <div className="space-y-4">
+          {(items || []).map((item, index) => (
+            <Card key={index} className="relative p-4" elevation={0}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex space-y-4">
+                  {Object.keys(meta.fields).map((fieldKey) => (
+                    <I18nInputMode
+                      key={fieldKey}
+                      path={[...path, index, fieldKey]}
+                      fieldValue={item[fieldKey]}
+                      fieldMeta={meta.fields[fieldKey]}
+                    />
+                  ))}
+                </div>
+
+                <Button
+                  onClick={() => handleRemoveItem(index)}
+                  variant="text"
+                  size="small"
+                  className="mt-1 shrink-0 text-error hover:bg-error/hover"
+                >
+                  <TrashIcon size={16} />
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {(items || []).length === 0 && (
+          <div className="py-8 text-center">
+            <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+              <div className="text-2xl opacity-50">📝</div>
+              <span className="text-body-medium">Henüz öğe eklenmemiş</span>
             </div>
           </div>
-        ))}
-        <button
-          onClick={handleAddItem}
-          className="btn-state-layer mt-2 mb-4 self-start rounded-full bg-secondary-container px-4 py-1.5 text-label-large font-medium text-on-secondary-container"
-        >
-          {meta.addButton || 'Yeni Ekle'}
-        </button>
-      </div>
+        )}
+      </Card>
     </FormField>
   )
 }
@@ -300,9 +409,9 @@ const DefaultRepeater = ({
   path: (string | number)[]
 }) => {
   return (
-    <div className="mb-4 flex flex-col">
-      <label className="text-label-large font-medium text-on-surface-variant">{label}</label>
-      <div className="flex flex-col rounded-lg border border-outline/30 p-4">
+    <div className="space-y-4">
+      <label className="block text-body-medium font-medium text-on-surface">{label}</label>
+      <Card className="space-y-4 p-4">
         {items.map((item, index) => (
           <I18nInputMode
             key={index}
@@ -311,7 +420,7 @@ const DefaultRepeater = ({
             fieldMeta={undefined}
           />
         ))}
-      </div>
+      </Card>
     </div>
   )
 }
@@ -326,35 +435,32 @@ const SectionComponent = ({
   path: (string | number)[]
 }) => {
   return (
-    <details
-      open={!meta.collapsed}
-      className="group mb-8 overflow-hidden rounded-xl border border-outline/20"
-    >
-      <summary className="flex cursor-pointer items-center bg-surface-container px-4 py-3 hover:bg-surface-container-high">
-        <div className="flex flex-row items-start">
-          {meta.icon && (
-            <span className="mt-0.5 mr-2 text-title-small opacity-80">{meta.icon}</span>
-          )}
+    <Card className="overflow-hidden" elevation={2}>
+      <details open={!meta.collapsed} className="group">
+        <summary className="btn-state-layer flex cursor-pointer items-center gap-3 bg-surface-container p-4 hover:bg-surface-container-high">
+          {meta.icon && <span className="text-title-medium">{meta.icon}</span>}
+          <h2 className="flex-1 text-title-medium font-semibold text-on-surface">{meta.label}</h2>
+          <ChevronDownIcon
+            size={20}
+            className="text-on-surface-variant transition-transform duration-200 group-open:rotate-180"
+          />
+        </summary>
+
+        <div className="space-y-4 border-t border-outline-variant/20 bg-surface-container-lowest p-4">
+          {Object.keys(data).map((fieldKey) => {
+            if (fieldKey.startsWith('_')) return null
+            return (
+              <I18nInputMode
+                key={fieldKey}
+                path={[...path, fieldKey]}
+                fieldValue={data[fieldKey]}
+                fieldMeta={data[`_${fieldKey}`] as unknown as AllMetaTypes}
+              />
+            )
+          })}
         </div>
-        <h2 className="text-title-medium font-semibold text-on-surface">{meta.label}</h2>
-        <span className="ml-auto text-on-surface-variant transition-transform group-open:rotate-180">
-          <ChevronDownIcon size={20} />
-        </span>
-      </summary>
-      <div className="flex flex-col border-t border-outline/20 bg-surface-container-lowest p-4">
-        {Object.keys(data).map((fieldKey) => {
-          if (fieldKey.startsWith('_')) return null
-          return (
-            <I18nInputMode
-              key={fieldKey}
-              path={[...path, fieldKey]}
-              fieldValue={data[fieldKey]}
-              fieldMeta={data[`_${fieldKey}`] as unknown as AllMetaTypes}
-            />
-          )
-        })}
-      </div>
-    </details>
+      </details>
+    </Card>
   )
 }
 
@@ -372,6 +478,7 @@ const TextInput = ({
   onUpdate: (v: string) => void
 }) => {
   const error = useValidation(value, meta)
+
   return (
     <FormField meta={meta} error={error}>
       <input
@@ -395,6 +502,7 @@ const TextareaInput = ({
   onUpdate: (v: string) => void
 }) => {
   const error = useValidation(value, meta)
+
   return (
     <FormField meta={meta} error={error}>
       <textarea
@@ -402,7 +510,7 @@ const TextareaInput = ({
         onChange={(e) => onUpdate(e.target.value)}
         placeholder={meta.placeholder}
         rows={4}
-        className={`input-base min-h-[80px] ${error ? 'border-error' : 'border-outline/30'}`}
+        className={`input-base ${error ? 'border-error' : 'border-outline/30'}`}
       />
     </FormField>
   )
@@ -417,34 +525,36 @@ const BooleanToggle = ({
   value: boolean
   onUpdate: (v: boolean) => void
 }) => (
-  <div>
-    <div className="flex min-h-[2.5rem] items-center justify-between">
-      <div className="flex flex-col">
-        <label className="text-title-small font-normal text-on-surface-variant">{meta.label}</label>
+  <div className="space-y-2">
+    <div className="flex items-center justify-between rounded-xl bg-surface-container-low p-3">
+      <div className="flex-1">
+        <label className="block text-body-medium font-medium text-on-surface">{meta.label}</label>
         {meta.description && (
-          <p className="text-label-medium text-on-surface-variant/70">{meta.description}</p>
+          <p className="mt-1 text-body-small text-on-surface-variant">{meta.description}</p>
         )}
       </div>
+
       <button
         type="button"
         role="switch"
         aria-checked={value}
         onClick={() => onUpdate(!value)}
-        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-primary/50 focus:outline-none ${
+        className={`btn-state-layer relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ${
           value ? 'bg-primary' : 'bg-outline'
         }`}
       >
         <span
-          aria-hidden="true"
-          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-on-primary shadow ring-0 transition duration-200 ease-in-out ${
-            value ? 'translate-x-4' : 'translate-x-0'
+          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full shadow-sm ring-0 transition-all duration-200 ${
+            value ? 'translate-x-6 bg-on-primary' : 'translate-x-0 bg-surface'
           }`}
         />
       </button>
     </div>
+
     {meta.hint && (
-      <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
-        <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
+      <div className="flex items-center gap-2 text-body-small text-on-surface-variant">
+        <span className="text-xs">💡</span>
+        <span>{meta.hint}</span>
       </div>
     )}
   </div>
@@ -464,7 +574,7 @@ const SelectInput = ({
       <select
         value={value}
         onChange={(e) => onUpdate(e.target.value)}
-        className="input-base appearance-none border-outline/30 pr-8"
+        className="input-base appearance-none pr-10"
       >
         {meta.options.map((option) => {
           const optValue = typeof option === 'string' ? option : option.value
@@ -476,7 +586,7 @@ const SelectInput = ({
           )
         })}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
         <ChevronDownIcon size={20} />
       </div>
     </div>
@@ -506,24 +616,32 @@ const RadioInput = ({
 
   return (
     <FormField meta={meta}>
-      <div className="flex flex-wrap gap-6">
+      <div className="grid grid-cols-1 gap-2">
         {options.map((opt) => (
           <label
             key={opt.value}
-            htmlFor={opt.value}
-            className="btn-state-layer flex cursor-pointer items-center gap-2 rounded-full bg-surface-container px-3 py-2 text-label-large text-primary transition-all duration-300 has-checked:bg-primary has-checked:px-6 has-checked:text-on-primary"
+            className={`btn-state-layer flex cursor-pointer items-center gap-3 rounded-xl border-2 p-4 transition-all duration-200 ${
+              opt.isChecked
+                ? 'border-primary bg-primary-container text-on-primary-container'
+                : 'border-outline-variant bg-surface hover:bg-surface-container-low'
+            }`}
             onClick={() => onUpdate(opt.value)}
           >
+            <div
+              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                opt.isChecked ? 'border-primary bg-primary' : 'border-outline'
+              }`}
+            >
+              {opt.isChecked && <div className="h-2 w-2 rounded-full bg-on-primary" />}
+            </div>
+            <span className="text-body-medium font-medium">{opt.label}</span>
             <input
               type="radio"
-              id={opt.value}
-              name={`radio-${meta.label}`}
               value={opt.value}
               checked={opt.isChecked}
               readOnly
-              className="hidden"
+              className="sr-only"
             />
-            <span>{opt.label}</span>
           </label>
         ))}
       </div>
@@ -541,25 +659,24 @@ const ColorInput = ({
   onUpdate: (v: string) => void
 }) => {
   const colorInputRef = useRef<HTMLInputElement>(null)
+  const currentColor = value || '#000000'
 
   const handleColorClick = () => {
     colorInputRef.current?.click()
   }
 
-  const currentColor = value || '#000000'
-
   return (
-    <div>
-      <div className="flex min-h-[2.5rem] items-center justify-between">
-        <div className="flex flex-col">
-          <label className="text-title-small font-normal text-on-surface-variant">
-            {meta.label}
-          </label>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between rounded-xl bg-surface-container-low p-3">
+        <div>
+          <label className="block text-body-medium font-medium text-on-surface">{meta.label}</label>
+          <span className="font-mono text-body-small text-on-surface-variant">{currentColor}</span>
         </div>
+
         <button
           type="button"
           onClick={handleColorClick}
-          className="relative inline-flex h-8 w-12 shrink-0 cursor-pointer rounded-md border-2 border-outline/30 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-primary/50 focus:outline-none"
+          className="btn-state-layer relative h-12 w-16 shrink-0 cursor-pointer rounded-lg border-2 border-outline-variant shadow-sm transition-all duration-200 hover:scale-105"
           style={{ backgroundColor: currentColor }}
         >
           <input
@@ -585,12 +702,12 @@ const PluralInput = ({
   onUpdate: (v: Record<string, string>) => void
 }) => {
   const allPluralForms = [
-    { key: 'zero', label: 'Sıfır', description: 'Hiç yok (0)' },
-    { key: 'one', label: 'Tekil', description: 'Bir tane (1)' },
-    { key: 'two', label: 'İkili', description: 'İki tane (2)' },
-    { key: 'few', label: 'Az', description: 'Birkaç tane (3-6)' },
-    { key: 'many', label: 'Çok', description: 'Çok sayıda (7-10)' },
-    { key: 'other', label: 'Diğer', description: 'Geri kalan (11+)' },
+    { key: 'zero', label: 'Sıfır', description: 'Hiç yok (0)', emoji: '0️⃣' },
+    { key: 'one', label: 'Tekil', description: 'Bir tane (1)', emoji: '1️⃣' },
+    { key: 'two', label: 'İkili', description: 'İki tane (2)', emoji: '2️⃣' },
+    { key: 'few', label: 'Az', description: 'Birkaç tane (3-6)', emoji: '🔢' },
+    { key: 'many', label: 'Çok', description: 'Çok sayıda (7-10)', emoji: '📊' },
+    { key: 'other', label: 'Diğer', description: 'Geri kalan (11+)', emoji: '♾️' },
   ]
 
   const existingForms = allPluralForms.filter(
@@ -608,41 +725,48 @@ const PluralInput = ({
     })
   }
 
+  const activeFormData = allPluralForms.find((f) => f.key === activeForm)
+
   return (
     <FormField meta={meta}>
-      <div className="space-y-4">
-        <div className="flex flex-wrap gap-3">
+      <Card className="space-y-4 p-4">
+        {/* Form Selector */}
+        <div className="flex flex-wrap gap-2">
           {existingForms.map((form) => (
-            <button
+            <Button
               key={form.key}
-              type="button"
               onClick={() => setActiveForm(form.key)}
-              className={`btn-state-layer flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-label-large transition-all duration-300 ${
-                activeForm === form.key
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface-container text-primary hover:bg-surface-container-high'
-              }`}
+              variant={activeForm === form.key ? 'filled' : 'outlined'}
+              size="small"
+              className="gap-1"
             >
+              <span>{form.emoji}</span>
               <span>{form.label}</span>
-            </button>
+            </Button>
           ))}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
-            <span>📝</span>
-            <span>Form: {activeForm}</span>
+        {/* Active Form Info */}
+        {activeFormData && (
+          <div className="rounded-lg bg-secondary-container/30 p-3">
+            <div className="flex items-center gap-2 text-body-small text-on-surface-variant">
+              <span>{activeFormData.emoji}</span>
+              <span>
+                <strong>{activeFormData.label}:</strong> {activeFormData.description}
+              </span>
+            </div>
           </div>
+        )}
 
-          <textarea
-            value={value[activeForm] || ''}
-            onChange={(e) => handlePluralChange(activeForm, e.target.value)}
-            placeholder={`${existingForms.find((f) => f.key === activeForm)?.label} durumu için mesaj... {{${meta.variable}}} kullanabilirsiniz`}
-            rows={3}
-            className="input-base min-h-[80px] border-outline/30"
-          />
-        </div>
-      </div>
+        {/* Text Input */}
+        <textarea
+          value={value[activeForm] || ''}
+          onChange={(e) => handlePluralChange(activeForm, e.target.value)}
+          placeholder={`${activeFormData?.label} durumu için mesaj... {{${meta.variable}}} kullanabilirsiniz`}
+          rows={4}
+          className={`input-base resize-y border-outline/30`}
+        />
+      </Card>
     </FormField>
   )
 }
@@ -667,39 +791,40 @@ const ContextualInput = ({
 
   return (
     <FormField meta={meta}>
-      <div className="space-y-4">
-        <div className="flex flex-wrap gap-3">
+      <Card className="space-y-4 p-4">
+        {/* Context Selector */}
+        <div className="flex flex-wrap gap-2">
           {meta.contexts.map((context) => (
-            <button
+            <Button
               key={context}
-              type="button"
               onClick={() => setActiveContext(context)}
-              className={`btn-state-layer flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-label-large transition-all duration-300 ${
-                activeContext === context
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface-container text-primary hover:bg-surface-container-high'
-              }`}
+              variant={activeContext === context ? 'filled' : 'outlined'}
+              size="small"
             >
-              <span>{context}</span>
-            </button>
+              {context}
+            </Button>
           ))}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
+        {/* Active Context Info */}
+        <div className="rounded-lg bg-tertiary-container/30 p-3">
+          <div className="flex items-center gap-2 text-body-small text-on-surface-variant">
             <span>🌐</span>
-            <span>Aktif: {activeContext}</span>
+            <span>
+              <strong>Aktif Bağlam:</strong> {activeContext}
+            </span>
           </div>
-
-          <textarea
-            value={value[activeContext] || ''}
-            onChange={(e) => handleContextChange(e.target.value)}
-            placeholder={`${activeContext} durumu için mesaj yazın...`}
-            rows={3}
-            className="input-base min-h-[80px] border-outline/30"
-          />
         </div>
-      </div>
+
+        {/* Text Input */}
+        <textarea
+          value={value[activeContext] || ''}
+          onChange={(e) => handleContextChange(e.target.value)}
+          placeholder={`${activeContext} durumu için mesaj yazın...`}
+          rows={4}
+          className={`input-base resize-y border-outline/30`}
+        />
+      </Card>
     </FormField>
   )
 }

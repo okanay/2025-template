@@ -30,7 +30,7 @@ export function EditFile() {
     loadFile,
     saveFile,
     setViewMode,
-    setZenMode,
+    resetJsonText,
   } = useI18nPanel()
 
   // Load file on mount or when search params change
@@ -128,7 +128,10 @@ export function EditFile() {
               />
               <ModeButton
                 isActive={viewMode === 'json'}
-                onClick={() => setViewMode('json')}
+                onClick={() => {
+                  setViewMode('json')
+                  resetJsonText()
+                }}
                 label="JSON"
               />
             </div>
