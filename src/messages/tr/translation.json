@@ -194,7 +194,13 @@
       "icon": "📦",
       "collapsed": true
     },
-    "categories": ["Elektronik", "Giyim", "Ev & Yaşam", "Spor & Outdoor", "Kitap & Hobi"],
+    "categories": [
+      { "name": "Elektronik" },
+      { "name": "Giyim" },
+      { "name": "Ev & Yaşam" },
+      { "name": "Spor & Outdoor" },
+      { "name": "Kitap & Hobi" }
+    ],
     "_categories": {
       "type": "repeater",
       "label": "Ürün Kategorileri",
@@ -297,7 +303,7 @@
     },
     "api_settings": {
       "_meta": {
-        "type": "object",
+        "type": "section",
         "label": "API Ayarları",
         "description": "Üçüncü parti API entegrasyonları"
       },
@@ -307,7 +313,7 @@
         "webhook_url": "https://api.muhtesemsitesi.com/webhooks/payment"
       },
       "_payment_gateway": {
-        "type": "object",
+        "type": "section",
         "fields": {
           "provider": {
             "type": "select",
@@ -336,7 +342,7 @@
         "enable_heatmaps": false
       },
       "_analytics": {
-        "type": "object",
+        "type": "section",
         "fields": {
           "google_analytics_id": {
             "type": "text",

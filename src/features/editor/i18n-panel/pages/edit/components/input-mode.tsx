@@ -210,7 +210,7 @@ const RepeaterComponent = ({
 
   return (
     <FormField meta={meta}>
-      <div className="flex flex-col gap-3 rounded-lg border border-outline/20 bg-surface-container-lowest p-3">
+      <div className="flex flex-col gap-3 rounded-lg border border-outline/20 bg-surface-container-lowest px-3 pt-3">
         {(items || []).map((item, index) => (
           <div key={index} className="relative rounded-md border border-outline/20 bg-surface p-3">
             <button
@@ -220,7 +220,7 @@ const RepeaterComponent = ({
             >
               <TrashIcon size={16} />
             </button>
-            <div className="flex flex-col gap-3 pr-4">
+            <div className="flex flex-col gap-4 pr-4">
               {Object.keys(meta.fields).map((fieldKey) => (
                 <I18nInputMode
                   key={fieldKey}
@@ -234,7 +234,7 @@ const RepeaterComponent = ({
         ))}
         <button
           onClick={handleAddItem}
-          className="btn-state-layer mt-2 self-start rounded-full bg-secondary-container px-4 py-1.5 text-label-large font-medium text-on-secondary-container"
+          className="btn-state-layer mt-2 mb-4 self-start rounded-full bg-secondary-container px-4 py-1.5 text-label-large font-medium text-on-secondary-container"
         >
           {meta.addButton || 'Yeni Ekle'}
         </button>
@@ -255,7 +255,7 @@ const DefaultRepeater = ({
   return (
     <div className="flex flex-col gap-4">
       <label className="text-label-large font-medium text-on-surface-variant">{label}</label>
-      <div className="flex flex-col gap-2 rounded-lg border border-outline/30 p-4">
+      <div className="flex flex-col gap-4 rounded-lg border border-outline/30 p-4">
         {items.map((item, index) => (
           <I18nInputMode
             key={index}
@@ -281,7 +281,7 @@ const SectionComponent = ({
   return (
     <details
       open={!meta.collapsed}
-      className="group mb-4 overflow-hidden rounded-xl border border-outline/20"
+      className="group mb-6 overflow-hidden rounded-xl border border-outline/20"
     >
       <summary className="flex cursor-pointer items-center gap-3 bg-surface-container px-4 py-3 hover:bg-surface-container-high">
         {meta.icon && <span className="text-lg opacity-80">{meta.icon}</span>}
@@ -290,7 +290,7 @@ const SectionComponent = ({
           <ChevronDownIcon size={20} />
         </span>
       </summary>
-      <div className="flex flex-col border-t border-outline/20 bg-surface-container-lowest p-4">
+      <div className="flex flex-col gap-y-4 border-t border-outline/20 bg-surface-container-lowest p-4">
         {Object.keys(data).map((fieldKey) => {
           if (fieldKey.startsWith('_')) return null
           return (
