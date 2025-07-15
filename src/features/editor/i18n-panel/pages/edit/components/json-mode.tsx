@@ -1,11 +1,15 @@
-export const I18nJsonEditor: React.FC<{
-  value: string
-  onChange: (newValue: string) => void
-  onSave: () => void
-  onReset: () => void
-  error: string | null
-  isZen: boolean
-}> = ({ value, onChange, onSave, onReset, error, isZen }) => {
+import { stripMetaRecursively, useI18nPanel } from '../store'
+
+export const I18nJsonEditor: React.FC = () => {
+  const {
+    jsonEditText: value,
+    setJsonText: onChange,
+    saveJsonChanges: onSave,
+    resetJsonText: onReset,
+    jsonError: error,
+    isZen,
+  } = useI18nPanel()
+
   let displayText = value
   if (isZen) {
     try {
@@ -60,20 +64,4 @@ export const I18nJsonEditor: React.FC<{
       )}
     </div>
   )
-}
-
-export function stripMetaRecursively(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(stripMetaRecursively)
-  }
-  if (obj !== null && typeof obj === 'object') {
-    const newObj: Record<string, any> = {}
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key) && !key.startsWith('_')) {
-        newObj[key] = stripMetaRecursively(obj[key])
-      }
-    }
-    return newObj
-  }
-  return obj
 }

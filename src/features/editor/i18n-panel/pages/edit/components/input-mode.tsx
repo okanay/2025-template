@@ -11,18 +11,18 @@ import {
   TextareaMeta,
 } from 'src/messages/schema'
 import { useValidation } from '../hooks/use-validation'
+import { useI18nPanel } from '../store'
 
 export const I18nInputMode = ({
   path,
   fieldValue,
   fieldMeta,
-  onUpdate,
 }: {
   path: (string | number)[]
   fieldValue: any
   fieldMeta: AllMetaTypes | undefined
-  onUpdate: (path: (string | number)[], newValue: any) => void
 }) => {
+  const { updateField } = useI18nPanel()
   const fieldKey = path[path.length - 1]
   const implicitLabel = String(fieldKey)
 
@@ -61,7 +61,7 @@ export const I18nInputMode = ({
               typeToRender === 'number' || typeof fieldValue === 'number'
                 ? Number(newValue) || 0
                 : newValue
-            onUpdate(path, finalValue)
+            updateField(path, finalValue)
           }}
         />
       )
@@ -73,7 +73,7 @@ export const I18nInputMode = ({
         <TextareaInput
           meta={fieldMeta as TextareaMeta}
           value={String(fieldValue ?? '')}
-          onUpdate={(newValue) => onUpdate(path, newValue)}
+          onUpdate={(newValue) => updateField(path, newValue)}
         />
       )
 
@@ -83,7 +83,7 @@ export const I18nInputMode = ({
         <SelectInput
           meta={fieldMeta as SelectMeta}
           value={String(fieldValue ?? '')}
-          onUpdate={(newValue) => onUpdate(path, newValue)}
+          onUpdate={(newValue) => updateField(path, newValue)}
         />
       )
 
@@ -93,7 +93,7 @@ export const I18nInputMode = ({
         <BooleanToggle
           meta={(fieldMeta as BooleanMeta) || { type: 'boolean', label: implicitLabel }}
           value={Boolean(fieldValue)}
-          onUpdate={(newValue) => onUpdate(path, newValue)}
+          onUpdate={(newValue) => updateField(path, newValue)}
         />
       )
 
@@ -113,7 +113,6 @@ export const I18nInputMode = ({
           }
           data={fieldValue as I18nData}
           path={path}
-          onUpdate={onUpdate}
         />
       )
 
@@ -123,19 +122,13 @@ export const I18nInputMode = ({
         <RepeaterComponent
           meta={fieldMeta as RepeaterMeta}
           items={fieldValue as any[]}
-          onUpdate={onUpdate}
           path={path}
         />
       )
 
     case 'array':
       return (
-        <DefaultRepeater
-          items={fieldValue}
-          label={fieldMeta?.label || implicitLabel}
-          path={path}
-          onUpdate={onUpdate}
-        />
+        <DefaultRepeater items={fieldValue} label={fieldMeta?.label || implicitLabel} path={path} />
       )
 
     // Special cases (no render)
@@ -188,14 +181,14 @@ const FormField = ({
 const RepeaterComponent = ({
   meta,
   items,
-  onUpdate,
   path,
 }: {
   meta: RepeaterMeta
   items: any[]
-  onUpdate: (path: (string | number)[], newValue: any) => void
   path: (string | number)[]
 }) => {
+  const { updateField } = useI18nPanel()
+
   const handleAddItem = () => {
     const newItem = Object.keys(meta.fields).reduce(
       (acc, key) => {
@@ -205,11 +198,11 @@ const RepeaterComponent = ({
       },
       {} as Record<string, any>,
     )
-    onUpdate(path, [...(items || []), newItem])
+    updateField(path, [...(items || []), newItem])
   }
 
   const handleRemoveItem = (index: number) => {
-    onUpdate(
+    updateField(
       path,
       items.filter((_, i) => i !== index),
     )
@@ -225,7 +218,7 @@ const RepeaterComponent = ({
               title="Bu elemanı sil"
               className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full text-on-surface-variant/50 transition-colors hover:bg-error-container hover:text-on-error-container"
             >
-              <TrashIcon />
+              <TrashIcon size={16} />
             </button>
             <div className="flex flex-col gap-3 pr-4">
               {Object.keys(meta.fields).map((fieldKey) => (
@@ -234,7 +227,6 @@ const RepeaterComponent = ({
                   path={[...path, index, fieldKey]}
                   fieldValue={item[fieldKey]}
                   fieldMeta={meta.fields[fieldKey]}
-                  onUpdate={onUpdate}
                 />
               ))}
             </div>
@@ -255,26 +247,21 @@ const DefaultRepeater = ({
   items,
   label,
   path,
-  onUpdate,
 }: {
   items: any[]
   label: string
   path: (string | number)[]
-  onUpdate: (path: (string | number)[], newValue: any) => void
 }) => {
   return (
     <div className="flex flex-col gap-4">
       <label className="text-label-large font-medium text-on-surface-variant">{label}</label>
       <div className="flex flex-col gap-2 rounded-lg border border-outline/30 p-4">
         {items.map((item, index) => (
-          // Dizinin her bir elemanı için tekrar ana renderer'ı çağırıyoruz.
-          // Bu, dizinin string, number veya obje içermesine bakılmaksızın çalışır.
           <I18nInputMode
             key={index}
             path={[...path, index]}
             fieldValue={item}
             fieldMeta={undefined}
-            onUpdate={onUpdate}
           />
         ))}
       </div>
@@ -286,12 +273,10 @@ const SectionComponent = ({
   meta,
   data,
   path,
-  onUpdate,
 }: {
   meta: SectionMeta
   data: I18nData
   path: (string | number)[]
-  onUpdate: (path: (string | number)[], newValue: any) => void
 }) => {
   return (
     <details
@@ -302,7 +287,7 @@ const SectionComponent = ({
         {meta.icon && <span className="text-lg opacity-80">{meta.icon}</span>}
         <h2 className="text-title-medium font-semibold text-on-surface">{meta.label}</h2>
         <span className="ml-auto text-on-surface-variant transition-transform group-open:rotate-180">
-          <ChevronDownIcon />
+          <ChevronDownIcon size={20} />
         </span>
       </summary>
       <div className="flex flex-col gap-0 border-t border-outline/20 bg-surface-container-lowest p-4">
@@ -314,7 +299,6 @@ const SectionComponent = ({
               path={[...path, fieldKey]}
               fieldValue={data[fieldKey]}
               fieldMeta={data[`_${fieldKey}`] as unknown as AllMetaTypes}
-              onUpdate={onUpdate}
             />
           )
         })}
@@ -382,7 +366,6 @@ const BooleanToggle = ({
   value: boolean
   onUpdate: (v: boolean) => void
 }) => (
-  // TASARIM: Toggle ve çevresindeki yapı daha kompakt ve hizalı.
   <div>
     <div className="flex min-h-[2.5rem] items-center justify-between">
       <div className="flex flex-col gap-0.5">
@@ -430,7 +413,7 @@ const SelectInput = ({
       <select
         value={value}
         onChange={(e) => onUpdate(e.target.value)}
-        className={`input-base appearance-none border-outline/30 pr-8`}
+        className="input-base appearance-none border-outline/30 pr-8"
       >
         {meta.options.map((option) => {
           const optValue = typeof option === 'string' ? option : option.value
@@ -443,7 +426,7 @@ const SelectInput = ({
         })}
       </select>
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
-        <ChevronDownIcon />
+        <ChevronDownIcon size={20} />
       </div>
     </div>
   </FormField>

@@ -17,8 +17,8 @@ import { Route as LangErrorRouteImport } from './routes/$lang/error'
 import { Route as LangAboutRouteImport } from './routes/$lang/about'
 import { Route as LangPublicIndexRouteImport } from './routes/$lang/_public/index'
 import { Route as LangAuthEditorRouteRouteImport } from './routes/$lang/_auth/editor.route'
-import { Route as LangAuthEditorIndexRouteImport } from './routes/$lang/_auth/editor.index'
-import { Route as LangAuthEditorI18nRouteImport } from './routes/$lang/_auth/editor.i18n'
+import { Route as LangAuthEditorI18nSelectRouteImport } from './routes/$lang/_auth/editor.i18n.select'
+import { Route as LangAuthEditorI18nEditRouteImport } from './routes/$lang/_auth/editor.i18n.edit'
 import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
 import { ServerRoute as RobotsDottxtServerRouteImport } from './routes/robots[.]txt'
 
@@ -54,14 +54,15 @@ const LangAuthEditorRouteRoute = LangAuthEditorRouteRouteImport.update({
   path: '/$lang/editor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LangAuthEditorIndexRoute = LangAuthEditorIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => LangAuthEditorRouteRoute,
-} as any)
-const LangAuthEditorI18nRoute = LangAuthEditorI18nRouteImport.update({
-  id: '/i18n',
-  path: '/i18n',
+const LangAuthEditorI18nSelectRoute =
+  LangAuthEditorI18nSelectRouteImport.update({
+    id: '/i18n/select',
+    path: '/i18n/select',
+    getParentRoute: () => LangAuthEditorRouteRoute,
+  } as any)
+const LangAuthEditorI18nEditRoute = LangAuthEditorI18nEditRouteImport.update({
+  id: '/i18n/edit',
+  path: '/i18n/edit',
   getParentRoute: () => LangAuthEditorRouteRoute,
 } as any)
 const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
@@ -82,17 +83,18 @@ export interface FileRoutesByFullPath {
   '/$lang/not-found': typeof LangNotFoundRoute
   '/$lang/editor': typeof LangAuthEditorRouteRouteWithChildren
   '/$lang': typeof LangPublicIndexRoute
-  '/$lang/editor/i18n': typeof LangAuthEditorI18nRoute
-  '/$lang/editor/': typeof LangAuthEditorIndexRoute
+  '/$lang/editor/i18n/edit': typeof LangAuthEditorI18nEditRoute
+  '/$lang/editor/i18n/select': typeof LangAuthEditorI18nSelectRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/error': typeof LangErrorRoute
   '/$lang/not-found': typeof LangNotFoundRoute
+  '/$lang/editor': typeof LangAuthEditorRouteRouteWithChildren
   '/$lang': typeof LangPublicIndexRoute
-  '/$lang/editor/i18n': typeof LangAuthEditorI18nRoute
-  '/$lang/editor': typeof LangAuthEditorIndexRoute
+  '/$lang/editor/i18n/edit': typeof LangAuthEditorI18nEditRoute
+  '/$lang/editor/i18n/select': typeof LangAuthEditorI18nSelectRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -102,8 +104,8 @@ export interface FileRoutesById {
   '/$lang/not-found': typeof LangNotFoundRoute
   '/$lang/_auth/editor': typeof LangAuthEditorRouteRouteWithChildren
   '/$lang/_public/': typeof LangPublicIndexRoute
-  '/$lang/_auth/editor/i18n': typeof LangAuthEditorI18nRoute
-  '/$lang/_auth/editor/': typeof LangAuthEditorIndexRoute
+  '/$lang/_auth/editor/i18n/edit': typeof LangAuthEditorI18nEditRoute
+  '/$lang/_auth/editor/i18n/select': typeof LangAuthEditorI18nSelectRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,17 +116,18 @@ export interface FileRouteTypes {
     | '/$lang/not-found'
     | '/$lang/editor'
     | '/$lang'
-    | '/$lang/editor/i18n'
-    | '/$lang/editor/'
+    | '/$lang/editor/i18n/edit'
+    | '/$lang/editor/i18n/select'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$lang/about'
     | '/$lang/error'
     | '/$lang/not-found'
-    | '/$lang'
-    | '/$lang/editor/i18n'
     | '/$lang/editor'
+    | '/$lang'
+    | '/$lang/editor/i18n/edit'
+    | '/$lang/editor/i18n/select'
   id:
     | '__root__'
     | '/'
@@ -133,8 +136,8 @@ export interface FileRouteTypes {
     | '/$lang/not-found'
     | '/$lang/_auth/editor'
     | '/$lang/_public/'
-    | '/$lang/_auth/editor/i18n'
-    | '/$lang/_auth/editor/'
+    | '/$lang/_auth/editor/i18n/edit'
+    | '/$lang/_auth/editor/i18n/select'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,18 +218,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangAuthEditorRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$lang/_auth/editor/': {
-      id: '/$lang/_auth/editor/'
-      path: '/'
-      fullPath: '/$lang/editor/'
-      preLoaderRoute: typeof LangAuthEditorIndexRouteImport
+    '/$lang/_auth/editor/i18n/select': {
+      id: '/$lang/_auth/editor/i18n/select'
+      path: '/i18n/select'
+      fullPath: '/$lang/editor/i18n/select'
+      preLoaderRoute: typeof LangAuthEditorI18nSelectRouteImport
       parentRoute: typeof LangAuthEditorRouteRoute
     }
-    '/$lang/_auth/editor/i18n': {
-      id: '/$lang/_auth/editor/i18n'
-      path: '/i18n'
-      fullPath: '/$lang/editor/i18n'
-      preLoaderRoute: typeof LangAuthEditorI18nRouteImport
+    '/$lang/_auth/editor/i18n/edit': {
+      id: '/$lang/_auth/editor/i18n/edit'
+      path: '/i18n/edit'
+      fullPath: '/$lang/editor/i18n/edit'
+      preLoaderRoute: typeof LangAuthEditorI18nEditRouteImport
       parentRoute: typeof LangAuthEditorRouteRoute
     }
   }
@@ -251,13 +254,13 @@ declare module '@tanstack/react-start/server' {
 }
 
 interface LangAuthEditorRouteRouteChildren {
-  LangAuthEditorI18nRoute: typeof LangAuthEditorI18nRoute
-  LangAuthEditorIndexRoute: typeof LangAuthEditorIndexRoute
+  LangAuthEditorI18nEditRoute: typeof LangAuthEditorI18nEditRoute
+  LangAuthEditorI18nSelectRoute: typeof LangAuthEditorI18nSelectRoute
 }
 
 const LangAuthEditorRouteRouteChildren: LangAuthEditorRouteRouteChildren = {
-  LangAuthEditorI18nRoute: LangAuthEditorI18nRoute,
-  LangAuthEditorIndexRoute: LangAuthEditorIndexRoute,
+  LangAuthEditorI18nEditRoute: LangAuthEditorI18nEditRoute,
+  LangAuthEditorI18nSelectRoute: LangAuthEditorI18nSelectRoute,
 }
 
 const LangAuthEditorRouteRouteWithChildren =
