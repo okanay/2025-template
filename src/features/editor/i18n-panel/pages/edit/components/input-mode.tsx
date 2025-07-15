@@ -140,7 +140,7 @@ export const I18nInputMode = ({
     default:
       if (fieldMeta) {
         return (
-          <div className="flex flex-col rounded-md bg-on-error-container p-3 text-error-container">
+          <div className="my-2 flex flex-col rounded-md bg-on-error-container p-3 text-error-container">
             <span className="text-title-medium">{fieldMeta.label || fieldKey}</span>
             <span className="text-title-small">
               ({fieldMeta.type}) react component daha hazır değil.
@@ -166,7 +166,7 @@ const FormField = ({
   children: React.ReactNode
 }) => {
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className="flex w-full flex-col">
       <label className="text-title-small font-normal text-on-surface-variant">{meta.label}</label>
       {children}
       <div className="min-h-[1rem] px-1">
@@ -212,7 +212,7 @@ const RepeaterComponent = ({
 
   return (
     <FormField meta={meta}>
-      <div className="flex flex-col gap-3 rounded-lg border border-outline/20 bg-surface-container-lowest px-3 pt-3">
+      <div className="flex flex-col rounded-lg border border-outline/20 bg-surface-container-lowest px-3 pt-3">
         {(items || []).map((item, index) => (
           <div key={index} className="relative rounded-md border border-outline/20 bg-surface p-3">
             <button
@@ -222,7 +222,7 @@ const RepeaterComponent = ({
             >
               <TrashIcon size={16} />
             </button>
-            <div className="flex flex-col gap-4 pr-4">
+            <div className="flex flex-col gap-y-4 px-4">
               {Object.keys(meta.fields).map((fieldKey) => (
                 <I18nInputMode
                   key={fieldKey}
@@ -255,9 +255,9 @@ const DefaultRepeater = ({
   path: (string | number)[]
 }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <label className="text-label-large font-medium text-on-surface-variant">{label}</label>
-      <div className="flex flex-col gap-4 rounded-lg border border-outline/30 p-4">
+      <div className="flex flex-col gap-y-4 rounded-lg border border-outline/30 p-4">
         {items.map((item, index) => (
           <I18nInputMode
             key={index}
@@ -283,9 +283,9 @@ const SectionComponent = ({
   return (
     <details
       open={!meta.collapsed}
-      className="group mb-6 overflow-hidden rounded-xl border border-outline/20"
+      className="group overflow-hidden rounded-xl border border-outline/20"
     >
-      <summary className="flex cursor-pointer items-center gap-3 bg-surface-container px-4 py-3 hover:bg-surface-container-high">
+      <summary className="flex cursor-pointer items-center bg-surface-container px-4 py-3 hover:bg-surface-container-high">
         {meta.icon && <span className="text-lg opacity-80">{meta.icon}</span>}
         <h2 className="text-title-medium font-semibold text-on-surface">{meta.label}</h2>
         <span className="ml-auto text-on-surface-variant transition-transform group-open:rotate-180">
@@ -370,7 +370,7 @@ const BooleanToggle = ({
 }) => (
   <div>
     <div className="flex min-h-[2.5rem] items-center justify-between">
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col">
         <label className="text-title-small font-normal text-on-surface-variant">{meta.label}</label>
         {meta.description && (
           <p className="text-label-medium text-on-surface-variant/70">{meta.description}</p>
@@ -394,7 +394,7 @@ const BooleanToggle = ({
       </button>
     </div>
     {meta.hint && (
-      <div className="min-h-[1rem] px-1 pt-1.5">
+      <div className="min-h-fit px-1 pt-1.5">
         <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
       </div>
     )}

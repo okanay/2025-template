@@ -137,7 +137,7 @@ export function EditFile() {
 
         <main className="flex flex-col gap-4">
           {/* JSON Editor */}
-          <div className={viewMode === 'json' ? 'flex flex-col gap-4' : 'hidden'}>
+          <div className={viewMode === 'json' ? 'flex flex-col' : 'hidden'}>
             <I18nJsonEditor />
           </div>
 
