@@ -15,6 +15,7 @@ import {
 } from 'src/messages/schema'
 import { useValidation } from '../hooks/use-validation'
 import { useI18nPanel } from '../store'
+import { useRef, useState } from 'react'
 
 export const I18nInputMode = ({
   path,
@@ -485,6 +486,7 @@ const SelectInput = ({
   </FormField>
 )
 
+// 1. RADIO INPUT - Array hazırlayıp döndür, state düzeltmesi
 const RadioInput = ({
   meta,
   value,
@@ -494,41 +496,132 @@ const RadioInput = ({
   value: string
   onUpdate: (v: string) => void
 }) => {
-  const error = useValidation(value, meta)
+  // Array olarak hazırla
+  const options = meta.options.map((option) => {
+    const optValue = typeof option === 'string' ? option : option.value
+    const optLabel = typeof option === 'string' ? option : option.label
+    const isChecked = String(value) === String(optValue)
+
+    return {
+      value: String(optValue),
+      label: optLabel,
+      isChecked,
+    }
+  })
 
   return (
-    <FormField meta={meta} error={error}>
-      <div className="space-y-3">
-        {meta.options.map((option, index) => {
-          const optValue = typeof option === 'string' ? option : option.value
-          const optLabel = typeof option === 'string' ? option : option.label
-          const inputId = `radio-${meta.label}-${index}`
-
-          return (
-            <label
-              key={String(optValue)}
-              htmlFor={inputId}
-              className="flex cursor-pointer items-center gap-3"
-            >
-              <input
-                id={inputId}
-                type="radio"
-                name={`radio-group-${meta.label}`}
-                value={String(optValue)}
-                checked={value === String(optValue)}
-                onChange={(e) => onUpdate(e.target.value)}
-                className="h-4 w-4 border-outline/50 text-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0"
-              />
-              <span className="text-body-medium text-on-surface select-none">{optLabel}</span>
-            </label>
-          )
-        })}
+    <FormField meta={meta}>
+      <div className="flex flex-wrap gap-6">
+        {options.map((opt) => (
+          <label
+            key={opt.value}
+            htmlFor={opt.value}
+            className="flex cursor-pointer items-center gap-2 rounded-full py-2 text-label-large text-primary transition-all duration-300 has-checked:bg-primary has-checked:px-6 has-checked:text-on-primary"
+            onClick={() => onUpdate(opt.value)}
+          >
+            <input
+              type="radio"
+              id={opt.value}
+              name={`radio-${meta.label}`}
+              value={opt.value}
+              checked={opt.isChecked}
+              readOnly
+              className="hidden"
+            />
+            <span>{opt.label}</span>
+          </label>
+        ))}
       </div>
     </FormField>
   )
 }
 
-// 2. CONTEXTUAL INPUT BİLEŞENİ
+// 2. COLOR INPUT - Boolean hiyerarşisi ama renk kutusu tasarımı
+const ColorInput = ({
+  meta,
+  value,
+  onUpdate,
+}: {
+  meta: ColorMeta
+  value: string
+  onUpdate: (v: string) => void
+}) => {
+  const colorInputRef = useRef<HTMLInputElement>(null)
+
+  const handleColorClick = () => {
+    colorInputRef.current?.click()
+  }
+
+  const currentColor = value || '#000000'
+
+  return (
+    <div>
+      <div className="flex min-h-[2.5rem] items-center justify-between">
+        <div className="flex flex-col">
+          <label className="text-title-small font-normal text-on-surface-variant">
+            {meta.label}
+          </label>
+          {meta.description && (
+            <p className="text-label-medium text-on-surface-variant/70">{meta.description}</p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={handleColorClick}
+          className="relative inline-flex h-8 w-12 shrink-0 cursor-pointer rounded-md border-2 border-outline/30 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-primary/50 focus:outline-none"
+          style={{ backgroundColor: currentColor }}
+        >
+          <input
+            ref={colorInputRef}
+            type="color"
+            value={currentColor}
+            onChange={(e) => onUpdate(e.target.value)}
+            className="absolute inset-0 cursor-pointer opacity-0"
+          />
+        </button>
+      </div>
+      {meta.hint && (
+        <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
+          <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// 3. PLURAL INPUT - Contextual ile benzer konsept, tek alan
+const PluralInput = ({
+  meta,
+  value,
+  onUpdate,
+}: {
+  meta: PluralMeta
+  value: string
+  onUpdate: (v: string) => void
+}) => {
+  const error = useValidation(value, meta)
+
+  return (
+    <FormField meta={meta} error={error}>
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-label-large font-medium text-on-surface-variant">
+          <span>📝</span>
+          <span>Değişken: {meta.variable}</span>
+        </div>
+
+        <textarea
+          value={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          placeholder={`Mesajınızı yazın... {${meta.variable}} değişkenini kullanabilirsiniz`}
+          rows={3}
+          className={`input-base min-h-[80px] ${error ? 'border-error' : 'border-outline/30'}`}
+        />
+      </div>
+    </FormField>
+  )
+}
+
+// 4. CONTEXTUAL INPUT - Plural ile benzer konsept, statik label yaklaşımı
 const ContextualInput = ({
   meta,
   value,
@@ -547,27 +640,18 @@ const ContextualInput = ({
 
   return (
     <FormField meta={meta}>
-      <div className="space-y-4 rounded-lg border border-outline/20 bg-surface-container-lowest p-4">
+      <div className="space-y-4">
         <div className="flex items-center gap-2 text-label-large font-medium text-on-surface-variant">
           <span>🌐</span>
-          <span>Bağlam Anahtarı: {meta.context_key}</span>
+          <span>Bağlam: {meta.context_key}</span>
         </div>
 
         {meta.contexts.map((context) => (
           <div key={context} className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-primary-container px-2 py-1 text-label-small text-on-primary-container">
+              <span className="inline-flex items-center rounded-full bg-primary-container px-3 py-1 text-label-medium text-on-primary-container">
                 {context}
               </span>
-              {meta.variables && meta.variables.length > 0 && (
-                <div className="flex gap-1">
-                  {meta.variables.map((variable) => (
-                    <span key={variable} className="text-label-small text-on-surface-variant/70">
-                      {`{${variable}}`}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
 
             <textarea
@@ -575,220 +659,18 @@ const ContextualInput = ({
               onChange={(e) => handleContextChange(context, e.target.value)}
               placeholder={`${context} durumu için mesaj yazın...`}
               rows={2}
-              className="input-base min-h-[60px] border-outline/30"
+              className="input-base border-outline/30"
             />
           </div>
         ))}
 
         {meta.variables && meta.variables.length > 0 && (
-          <div className="mt-3 rounded-md bg-secondary-container/20 p-3">
-            <p className="mb-2 text-label-small text-on-surface-variant">
-              Kullanılabilir değişkenler:
+          <div className="rounded-md bg-secondary-container/20 p-3">
+            <p className="text-label-small text-on-surface-variant">
+              Değişkenler: {meta.variables.map((v) => `{${v}}`).join(', ')}
             </p>
-            <div className="flex flex-wrap gap-2">
-              {meta.variables.map((variable) => (
-                <code
-                  key={variable}
-                  className="rounded bg-surface-container px-2 py-1 font-mono text-label-small text-on-surface"
-                >
-                  {`{${variable}}`}
-                </code>
-              ))}
-            </div>
           </div>
         )}
-      </div>
-    </FormField>
-  )
-}
-
-// 3. PLURAL INPUT BİLEŞENİ
-const PluralInput = ({
-  meta,
-  value,
-  onUpdate,
-}: {
-  meta: PluralMeta
-  value: string
-  onUpdate: (v: string) => void
-}) => {
-  const error = useValidation(value, meta)
-
-  // Türkçe çoğul örnekleri
-  const pluralExamples = [
-    { count: 0, label: '0 (sıfır)' },
-    { count: 1, label: '1 (tekil)' },
-    { count: 2, label: '2 (çoğul)' },
-    { count: 5, label: '5 (çoğul)' },
-    { count: 10, label: '10+ (çok)' },
-  ]
-
-  return (
-    <FormField meta={meta} error={error}>
-      <div className="space-y-4">
-        <textarea
-          value={value}
-          onChange={(e) => onUpdate(e.target.value)}
-          placeholder={`Çoğul mesajınızı yazın... Örn: "Bu üründen sadece {${meta.variable}} adet kaldı!"`}
-          rows={3}
-          className={`input-base min-h-[80px] ${error ? 'border-error' : 'border-outline/30'}`}
-        />
-
-        <div className="rounded-lg border border-outline/20 bg-surface-container-lowest p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <span>🔢</span>
-            <span className="text-label-large font-medium text-on-surface-variant">
-              Değişken: {meta.variable}
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            <p className="mb-2 text-label-small text-on-surface-variant">
-              Mesajınızın farklı sayılarla nasıl görüneceği:
-            </p>
-
-            {pluralExamples.map(({ count, label }) => (
-              <div
-                key={count}
-                className="flex items-center gap-3 rounded-md bg-surface-container p-2"
-              >
-                <span className="min-w-20 text-label-medium font-medium text-primary">
-                  {label}:
-                </span>
-                <span className="font-mono text-body-small text-on-surface-variant">
-                  {value.replace(new RegExp(`{${meta.variable}}`, 'g'), String(count))}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-3 rounded-md bg-secondary-container/20 p-3">
-            <p className="text-label-small text-on-surface-variant">
-              💡 <strong>İpucu:</strong> Mesajınızda{' '}
-              <code className="rounded bg-surface-container px-1 font-mono">
-                {`{${meta.variable}}`}
-              </code>{' '}
-              kullanarak dinamik sayı gösterebilirsiniz.
-            </p>
-          </div>
-        </div>
-      </div>
-    </FormField>
-  )
-}
-
-// 4. COLOR INPUT BİLEŞENİ
-const ColorInput = ({
-  meta,
-  value,
-  onUpdate,
-}: {
-  meta: ColorMeta
-  value: string
-  onUpdate: (v: string) => void
-}) => {
-  // Renk formatını kontrol et ve normalize et
-  const normalizeColor = (color: string): string => {
-    if (!color) return '#000000'
-    if (color.startsWith('#')) return color
-    return `#${color}`
-  }
-
-  const currentColor = normalizeColor(value)
-
-  // Renk önizlemesi için kontrastlı metin rengi hesapla
-  const getContrastTextColor = (hexColor: string): string => {
-    const hex = hexColor.replace('#', '')
-    const r = parseInt(hex.substr(0, 2), 16)
-    const g = parseInt(hex.substr(2, 2), 16)
-    const b = parseInt(hex.substr(4, 2), 16)
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-    return luminance > 0.5 ? '#000000' : '#ffffff'
-  }
-
-  // Önceden tanımlı renk paleti
-  const presetColors = [
-    '#3B82F6', // Blue
-    '#10B981', // Emerald
-    '#F59E0B', // Amber
-    '#EF4444', // Red
-    '#8B5CF6', // Violet
-    '#F97316', // Orange
-    '#06B6D4', // Cyan
-    '#84CC16', // Lime
-    '#EC4899', // Pink
-    '#6B7280', // Gray
-    '#000000', // Black
-    '#FFFFFF', // White
-  ]
-
-  return (
-    <FormField meta={meta}>
-      <div className="space-y-4">
-        {/* Ana renk seçici */}
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <input
-              type="color"
-              value={currentColor}
-              onChange={(e) => onUpdate(e.target.value)}
-              className="h-12 w-16 cursor-pointer rounded-lg border-2 border-outline/30 bg-transparent"
-            />
-          </div>
-
-          <div className="flex-1">
-            <input
-              type="text"
-              value={value}
-              onChange={(e) => onUpdate(e.target.value)}
-              placeholder="#3B82F6"
-              className="input-base border-outline/30"
-              pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-            />
-          </div>
-        </div>
-
-        {/* Renk önizlemesi */}
-        <div
-          className="flex items-center justify-center rounded-lg border border-outline/20 p-6 text-center"
-          style={{
-            backgroundColor: currentColor,
-            color: getContrastTextColor(currentColor),
-          }}
-        >
-          <div>
-            <p className="text-title-medium font-semibold">Önizleme</p>
-            <p className="text-body-small opacity-80">{currentColor.toUpperCase()}</p>
-          </div>
-        </div>
-
-        {/* Önceden tanımlı renkler */}
-        <div className="space-y-2">
-          <p className="text-label-medium text-on-surface-variant">Hızlı seçim:</p>
-          <div className="grid grid-cols-6 gap-2">
-            {presetColors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => onUpdate(color)}
-                className={`h-8 w-full rounded-md border-2 transition-all hover:scale-110 ${
-                  currentColor.toLowerCase() === color.toLowerCase()
-                    ? 'border-primary ring-2 ring-primary/20'
-                    : 'border-outline/30 hover:border-outline'
-                }`}
-                style={{ backgroundColor: color }}
-                title={color}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Renk bilgisi */}
-        <div className="rounded-md bg-secondary-container/20 p-3">
-          <p className="text-label-small text-on-surface-variant">
-            💡 <strong>Hex formatı:</strong> #RRGGBB (örn: #3B82F6) veya #RGB (örn: #3BF)
-          </p>
-        </div>
       </div>
     </FormField>
   )
