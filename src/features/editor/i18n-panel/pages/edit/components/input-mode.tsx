@@ -210,7 +210,7 @@ const FormField = ({
 }) => {
   return (
     <div className="my-2 flex w-full flex-col gap-y-1">
-      <label className="text-title-small font-normal text-on-surface-variant">{meta.label}</label>
+      <label className="text-label-large text-on-surface-variant">{meta.label}</label>
       {children}
       <div className="min-h-fit px-1">
         {error ? (
@@ -486,7 +486,6 @@ const SelectInput = ({
   </FormField>
 )
 
-// 1. RADIO INPUT - Array hazırlayıp döndür, state düzeltmesi
 const RadioInput = ({
   meta,
   value,
@@ -496,7 +495,6 @@ const RadioInput = ({
   value: string
   onUpdate: (v: string) => void
 }) => {
-  // Array olarak hazırla
   const options = meta.options.map((option) => {
     const optValue = typeof option === 'string' ? option : option.value
     const optLabel = typeof option === 'string' ? option : option.label
@@ -516,7 +514,7 @@ const RadioInput = ({
           <label
             key={opt.value}
             htmlFor={opt.value}
-            className="flex cursor-pointer items-center gap-2 rounded-full py-2 text-label-large text-primary transition-all duration-300 has-checked:bg-primary has-checked:px-6 has-checked:text-on-primary"
+            className="btn-state-layer flex cursor-pointer items-center gap-2 rounded-full bg-surface-container px-3 py-2 text-label-large text-primary transition-all duration-300 has-checked:bg-primary has-checked:px-6 has-checked:text-on-primary"
             onClick={() => onUpdate(opt.value)}
           >
             <input
@@ -536,7 +534,6 @@ const RadioInput = ({
   )
 }
 
-// 2. COLOR INPUT - Boolean hiyerarşisi ama renk kutusu tasarımı
 const ColorInput = ({
   meta,
   value,
@@ -580,48 +577,90 @@ const ColorInput = ({
           />
         </button>
       </div>
-      {meta.hint && (
-        <div className="mt-1 flex min-h-fit w-fit flex-col items-center rounded-xl bg-secondary-container px-2 py-1 text-center text-on-secondary-container">
-          <p className="text-label-medium text-on-surface-variant/70">{meta.hint}</p>
-        </div>
-      )}
     </div>
   )
 }
 
-// 3. PLURAL INPUT - Contextual ile benzer konsept, tek alan
 const PluralInput = ({
   meta,
   value,
   onUpdate,
+  path,
 }: {
   meta: PluralMeta
-  value: string
-  onUpdate: (v: string) => void
+  value: Record<string, string>
+  onUpdate: (v: Record<string, string>) => void
+  path: (string | number)[]
 }) => {
-  const error = useValidation(value, meta)
+  // i18next plural suffixleri (Türkçe için)
+  const pluralForms = [
+    { suffix: '', label: 'Varsayılan', description: 'Genel durum' },
+    { suffix: '_zero', label: 'Sıfır', description: 'Hiç yok (0)' },
+    { suffix: '_one', label: 'Tekil', description: 'Bir tane (1)' },
+    { suffix: '_other', label: 'Çoğul', description: 'Birden fazla (2+)' },
+  ]
+
+  const [activeForm, setActiveForm] = useState(pluralForms[0].suffix)
+
+  const handlePluralChange = (suffix: string, newValue: string) => {
+    const updatedValue = {
+      ...value,
+      [suffix]: newValue,
+    }
+    onUpdate(updatedValue)
+  }
+
+  // Base key'i al (path'in son elemanı)
+  const baseKey = String(path[path.length - 1])
 
   return (
-    <FormField meta={meta} error={error}>
-      <div className="space-y-3">
-        <div className="flex items-center gap-2 text-label-large font-medium text-on-surface-variant">
-          <span>📝</span>
-          <span>Değişken: {meta.variable}</span>
+    <FormField meta={meta}>
+      <div className="space-y-4">
+        {/* Plural form butonları */}
+        <div className="flex flex-wrap gap-3">
+          {pluralForms.map((form) => (
+            <button
+              key={form.suffix}
+              type="button"
+              onClick={() => setActiveForm(form.suffix)}
+              className={`btn-state-layer flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-label-large transition-all duration-300 ${
+                activeForm === form.suffix
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container text-primary hover:bg-surface-container-high'
+              }`}
+            >
+              <span>{form.label}</span>
+            </button>
+          ))}
         </div>
 
-        <textarea
-          value={value}
-          onChange={(e) => onUpdate(e.target.value)}
-          placeholder={`Mesajınızı yazın... {${meta.variable}} değişkenini kullanabilirsiniz`}
-          rows={3}
-          className={`input-base min-h-[80px] ${error ? 'border-error' : 'border-outline/30'}`}
-        />
+        {/* Aktif form için mesaj alanı */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
+            <span>📝</span>
+            <span>
+              Anahtar: {baseKey}
+              {activeForm}
+            </span>
+            <span className="text-label-small opacity-70">
+              ({pluralForms.find((f) => f.suffix === activeForm)?.description})
+            </span>
+          </div>
+
+          <textarea
+            value={value[activeForm] || ''}
+            onChange={(e) => handlePluralChange(activeForm, e.target.value)}
+            placeholder={`${pluralForms.find((f) => f.suffix === activeForm)?.label} durumu için mesaj... {${meta.variable}} kullanabilirsiniz`}
+            rows={3}
+            className="input-base min-h-[80px] border-outline/30"
+          />
+        </div>
       </div>
     </FormField>
   )
 }
 
-// 4. CONTEXTUAL INPUT - Plural ile benzer konsept, statik label yaklaşımı
+// 4. CONTEXTUAL INPUT - Butonlar + textarea (değişkenler: meta.variables)
 const ContextualInput = ({
   meta,
   value,
@@ -631,46 +670,56 @@ const ContextualInput = ({
   value: Record<string, string>
   onUpdate: (v: Record<string, string>) => void
 }) => {
-  const handleContextChange = (context: string, newValue: string) => {
+  const [activeContext, setActiveContext] = useState(meta.contexts[0] || '')
+
+  const handleContextChange = (newValue: string) => {
     onUpdate({
       ...value,
-      [context]: newValue,
+      [activeContext]: newValue,
     })
   }
 
   return (
     <FormField meta={meta}>
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-label-large font-medium text-on-surface-variant">
-          <span>🌐</span>
-          <span>Bağlam: {meta.context_key}</span>
+        {/* Context butonları */}
+        <div className="flex flex-wrap gap-3">
+          {meta.contexts.map((context) => (
+            <button
+              key={context}
+              type="button"
+              onClick={() => setActiveContext(context)}
+              className={`btn-state-layer flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-label-large transition-all duration-300 ${
+                activeContext === context
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container text-primary hover:bg-surface-container-high'
+              }`}
+            >
+              <span>{context}</span>
+            </button>
+          ))}
         </div>
 
-        {meta.contexts.map((context) => (
-          <div key={context} className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-primary-container px-3 py-1 text-label-medium text-on-primary-container">
-                {context}
+        {/* Mesaj alanı */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
+            <span>🌐</span>
+            <span>Aktif: {activeContext}</span>
+            {meta.variables && meta.variables.length > 0 && (
+              <span className="text-label-small">
+                ({meta.variables.map((v) => `{${v}}`).join(', ')})
               </span>
-            </div>
-
-            <textarea
-              value={value[context] || ''}
-              onChange={(e) => handleContextChange(context, e.target.value)}
-              placeholder={`${context} durumu için mesaj yazın...`}
-              rows={2}
-              className="input-base border-outline/30"
-            />
+            )}
           </div>
-        ))}
 
-        {meta.variables && meta.variables.length > 0 && (
-          <div className="rounded-md bg-secondary-container/20 p-3">
-            <p className="text-label-small text-on-surface-variant">
-              Değişkenler: {meta.variables.map((v) => `{${v}}`).join(', ')}
-            </p>
-          </div>
-        )}
+          <textarea
+            value={value[activeContext] || ''}
+            onChange={(e) => handleContextChange(e.target.value)}
+            placeholder={`${activeContext} durumu için mesaj yazın...`}
+            rows={3}
+            className="input-base min-h-[80px] border-outline/30"
+          />
+        </div>
       </div>
     </FormField>
   )

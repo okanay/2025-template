@@ -17,36 +17,45 @@
         { "label": "Okuyucu", "value": "reader" },
         { "label": "Misafir", "value": "guest" }
       ],
-      "required": true
+      "required": true,
+      "hint": "Kullanıcının sistem üzerindeki yetkilerini belirler"
     },
 
     "brand_color": "#3B82F6",
     "_brand_color": {
       "type": "color",
-      "label": "Marka Ana Rengi"
+      "label": "Marka Ana Rengi",
+      "hint": "Sitenizin birincil renk teması"
     },
 
     "accent_color": "#10B981",
     "_accent_color": {
       "type": "color",
-      "label": "Vurgu Rengi"
+      "label": "Vurgu Rengi",
+      "hint": "Butonlar ve önemli elementler için"
     },
 
-    "item_count_message": "Sepetinizde {count} ürün bulunuyor",
+    "item_count_message": "Sepetinizde ürün bulunmamaktadır",
+    "item_count_message_zero": "Sepetinizde ürün bulunmamaktadır",
+    "item_count_message_one": "Sepetinizde {{count}} ürün bulunuyor",
+    "item_count_message_other": "Sepetinizde {{count}} ürün bulunuyor",
     "_item_count_message": {
       "type": "plural",
       "label": "Sepet Ürün Sayısı Mesajı",
-      "variable": "count"
+      "variable": "count",
+      "hint": "i18next plural sistemi için farklı sayı durumları"
     },
 
-    "stock_warning": "Bu üründen sadece {remaining} adet kaldı!",
+    "stock_warning": "Stok tükendi!",
+    "stock_warning_zero": "Stok tükendi!",
+    "stock_warning_one": "Son {{remaining}} ürün kaldı!",
+    "stock_warning_other": "{{remaining}} ürün kaldı!",
     "_stock_warning": {
       "type": "plural",
       "label": "Stok Uyarı Mesajı",
       "variable": "remaining",
       "required": true,
-      "minLength": 10,
-      "maxLength": 100
+      "hint": "Stok durumuna göre dinamik mesajlar"
     },
 
     "order_status_messages": {
@@ -60,7 +69,8 @@
       "label": "Sipariş Durum Mesajları",
       "context_key": "status",
       "contexts": ["pending", "processing", "shipped", "delivered"],
-      "variables": ["order_id", "customer_name", "tracking_number"]
+      "variables": ["order_id", "customer_name", "tracking_number"],
+      "hint": "Her sipariş durumu için özelleştirilmiş mesajlar"
     },
 
     "notification_messages": {
@@ -74,7 +84,8 @@
       "label": "Bildirim Mesajları",
       "context_key": "type",
       "contexts": ["info", "warning", "error", "success"],
-      "variables": ["message", "user_name", "timestamp"]
+      "variables": ["message", "user_name", "timestamp"],
+      "hint": "Bildirim türüne göre farklı mesaj formatları"
     },
 
     "theme_preferences": {
