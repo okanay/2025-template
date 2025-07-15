@@ -1,3 +1,4 @@
+import { SparklesIcon } from 'lucide-react'
 import { stripMetaRecursively, useI18nPanel } from '../store'
 
 export const I18nJsonEditor: React.FC = () => {
@@ -8,6 +9,7 @@ export const I18nJsonEditor: React.FC = () => {
     resetJsonText: onReset,
     jsonError: error,
     isZen,
+    setZenMode,
   } = useI18nPanel()
 
   let displayText = value
@@ -47,6 +49,19 @@ export const I18nJsonEditor: React.FC = () => {
             className="btn-state-layer rounded-full bg-primary-container px-6 py-2 text-label-large text-on-primary-container"
           >
             JSON'ı Kaydet
+          </button>
+          {/* Zen Mode Toggle */}
+          <button
+            onClick={() => setZenMode(!isZen)}
+            title="Zen Modu Aç/Kapat"
+            className={`btn-state-layer flex items-center gap-2 rounded-full border border-outline/30 px-3 py-1.5 transition-colors ${
+              isZen
+                ? 'bg-tertiary-container text-on-tertiary-container'
+                : 'bg-surface-container text-on-surface-variant'
+            }`}
+          >
+            <SparklesIcon size={16} />
+            <span className="text-label-large">Zen</span>
           </button>
         </div>
       </div>

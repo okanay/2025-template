@@ -140,9 +140,11 @@ export const I18nInputMode = ({
     default:
       if (fieldMeta) {
         return (
-          <div className="rounded-md bg-error-container p-2 text-on-error-container">
-            <strong>{fieldMeta.label || fieldKey}</strong> ({fieldMeta.type}) component is not yet
-            defined.
+          <div className="flex flex-col rounded-md bg-on-error-container p-3 text-error-container">
+            <span className="text-title-medium">{fieldMeta.label || fieldKey}</span>
+            <span className="text-title-small">
+              ({fieldMeta.type}) react component daha hazır değil.
+            </span>
           </div>
         )
       }

@@ -132,20 +132,6 @@ export function EditFile() {
                 label="JSON"
               />
             </div>
-
-            {/* Zen Mode Toggle */}
-            <button
-              onClick={() => setZenMode(!isZen)}
-              title="Zen Modu Aç/Kapat"
-              className={`btn-state-layer flex items-center gap-2 rounded-full border border-outline/30 px-3 py-1.5 transition-colors ${
-                isZen
-                  ? 'bg-tertiary-container text-on-tertiary-container'
-                  : 'bg-surface-container text-on-surface-variant'
-              }`}
-            >
-              <SparklesIcon size={16} />
-              <span className="text-label-large">Zen</span>
-            </button>
           </div>
         </header>
 
