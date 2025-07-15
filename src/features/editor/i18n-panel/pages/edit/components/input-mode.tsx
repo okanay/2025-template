@@ -139,7 +139,6 @@ export const I18nInputMode = ({
         />
       )
 
-    // Color inputs (YENİ)
     case 'color':
       return (
         <ColorInput
@@ -158,7 +157,6 @@ export const I18nInputMode = ({
         />
       )
 
-    // Contextual inputs (YENİ)
     case 'contextual':
       return (
         <ContextualInput
@@ -557,9 +555,6 @@ const ColorInput = ({
           <label className="text-title-small font-normal text-on-surface-variant">
             {meta.label}
           </label>
-          {meta.description && (
-            <p className="text-label-medium text-on-surface-variant/70">{meta.description}</p>
-          )}
         </div>
         <button
           type="button"
@@ -586,11 +581,10 @@ const PluralInput = ({
   onUpdate,
 }: {
   meta: PluralMeta
-  value: Record<string, string> // Obje olarak
+  value: Record<string, string>
   onUpdate: (v: Record<string, string>) => void
 }) => {
-  // i18next plural formları
-  const pluralForms = [
+  const allPluralForms = [
     { key: 'zero', label: 'Sıfır', description: 'Hiç yok (0)' },
     { key: 'one', label: 'Tekil', description: 'Bir tane (1)' },
     { key: 'two', label: 'İkili', description: 'İki tane (2)' },
@@ -599,7 +593,13 @@ const PluralInput = ({
     { key: 'other', label: 'Diğer', description: 'Geri kalan (11+)' },
   ]
 
-  const [activeForm, setActiveForm] = useState('other')
+  const existingForms = allPluralForms.filter(
+    (form) => value && Object.prototype.hasOwnProperty.call(value, form.key),
+  )
+
+  const [activeForm, setActiveForm] = useState(
+    existingForms.length > 0 ? existingForms[0].key : 'other',
+  )
 
   const handlePluralChange = (formKey: string, newValue: string) => {
     onUpdate({
@@ -611,9 +611,8 @@ const PluralInput = ({
   return (
     <FormField meta={meta}>
       <div className="space-y-4">
-        {/* Plural form butonları */}
         <div className="flex flex-wrap gap-3">
-          {pluralForms.map((form) => (
+          {existingForms.map((form) => (
             <button
               key={form.key}
               type="button"
@@ -629,20 +628,16 @@ const PluralInput = ({
           ))}
         </div>
 
-        {/* Aktif form için mesaj alanı */}
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
             <span>📝</span>
             <span>Form: {activeForm}</span>
-            <span className="text-label-small opacity-70">
-              ({pluralForms.find((f) => f.key === activeForm)?.description})
-            </span>
           </div>
 
           <textarea
             value={value[activeForm] || ''}
             onChange={(e) => handlePluralChange(activeForm, e.target.value)}
-            placeholder={`${pluralForms.find((f) => f.key === activeForm)?.label} durumu için mesaj... {{${meta.variable}}} kullanabilirsiniz`}
+            placeholder={`${existingForms.find((f) => f.key === activeForm)?.label} durumu için mesaj... {{${meta.variable}}} kullanabilirsiniz`}
             rows={3}
             className="input-base min-h-[80px] border-outline/30"
           />
@@ -673,7 +668,6 @@ const ContextualInput = ({
   return (
     <FormField meta={meta}>
       <div className="space-y-4">
-        {/* Context butonları */}
         <div className="flex flex-wrap gap-3">
           {meta.contexts.map((context) => (
             <button
@@ -691,16 +685,10 @@ const ContextualInput = ({
           ))}
         </div>
 
-        {/* Mesaj alanı */}
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
             <span>🌐</span>
             <span>Aktif: {activeContext}</span>
-            {meta.variables && meta.variables.length > 0 && (
-              <span className="text-label-small">
-                ({meta.variables.map((v) => `{${v}}`).join(', ')})
-              </span>
-            )}
           </div>
 
           <textarea
