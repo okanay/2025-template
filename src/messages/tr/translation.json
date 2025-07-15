@@ -35,21 +35,11 @@
       "hint": "Butonlar ve önemli elementler için"
     },
 
-    "item_count_message": "Sepetinizde ürün bulunmamaktadır",
-    "item_count_message_zero": "Sepetinizde ürün bulunmamaktadır",
-    "item_count_message_one": "Sepetinizde {{count}} ürün bulunuyor",
-    "item_count_message_other": "Sepetinizde {{count}} ürün bulunuyor",
-    "_item_count_message": {
-      "type": "plural",
-      "label": "Sepet Ürün Sayısı Mesajı",
-      "variable": "count",
-      "hint": "i18next plural sistemi için farklı sayı durumları"
+    "stock_warning": {
+      "zero": "Stok tükendi!",
+      "one": "Son {{remaining}} ürün kaldı!",
+      "other": "{{remaining}} ürün kaldı!"
     },
-
-    "stock_warning": "Stok tükendi!",
-    "stock_warning_zero": "Stok tükendi!",
-    "stock_warning_one": "Son {{remaining}} ürün kaldı!",
-    "stock_warning_other": "{{remaining}} ürün kaldı!",
     "_stock_warning": {
       "type": "plural",
       "label": "Stok Uyarı Mesajı",

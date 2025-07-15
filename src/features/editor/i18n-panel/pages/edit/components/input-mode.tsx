@@ -149,22 +149,21 @@ export const I18nInputMode = ({
         />
       )
 
+    case 'plural':
+      return (
+        <PluralInput
+          meta={fieldMeta as PluralMeta}
+          value={(fieldValue as Record<string, string>) || {}}
+          onUpdate={(newValue) => updateField(path, newValue)}
+        />
+      )
+
     // Contextual inputs (YENİ)
     case 'contextual':
       return (
         <ContextualInput
           meta={fieldMeta as ContextualMeta}
           value={(fieldValue as Record<string, string>) || {}}
-          onUpdate={(newValue) => updateField(path, newValue)}
-        />
-      )
-
-    // Plural inputs (YENİ)
-    case 'plural':
-      return (
-        <PluralInput
-          meta={fieldMeta as PluralMeta}
-          value={String(fieldValue ?? '')}
           onUpdate={(newValue) => updateField(path, newValue)}
         />
       )
@@ -585,33 +584,29 @@ const PluralInput = ({
   meta,
   value,
   onUpdate,
-  path,
 }: {
   meta: PluralMeta
-  value: Record<string, string>
+  value: Record<string, string> // Obje olarak
   onUpdate: (v: Record<string, string>) => void
-  path: (string | number)[]
 }) => {
-  // i18next plural suffixleri (Türkçe için)
+  // i18next plural formları
   const pluralForms = [
-    { suffix: '', label: 'Varsayılan', description: 'Genel durum' },
-    { suffix: '_zero', label: 'Sıfır', description: 'Hiç yok (0)' },
-    { suffix: '_one', label: 'Tekil', description: 'Bir tane (1)' },
-    { suffix: '_other', label: 'Çoğul', description: 'Birden fazla (2+)' },
+    { key: 'zero', label: 'Sıfır', description: 'Hiç yok (0)' },
+    { key: 'one', label: 'Tekil', description: 'Bir tane (1)' },
+    { key: 'two', label: 'İkili', description: 'İki tane (2)' },
+    { key: 'few', label: 'Az', description: 'Birkaç tane (3-6)' },
+    { key: 'many', label: 'Çok', description: 'Çok sayıda (7-10)' },
+    { key: 'other', label: 'Diğer', description: 'Geri kalan (11+)' },
   ]
 
-  const [activeForm, setActiveForm] = useState(pluralForms[0].suffix)
+  const [activeForm, setActiveForm] = useState('other')
 
-  const handlePluralChange = (suffix: string, newValue: string) => {
-    const updatedValue = {
+  const handlePluralChange = (formKey: string, newValue: string) => {
+    onUpdate({
       ...value,
-      [suffix]: newValue,
-    }
-    onUpdate(updatedValue)
+      [formKey]: newValue,
+    })
   }
-
-  // Base key'i al (path'in son elemanı)
-  const baseKey = String(path[path.length - 1])
 
   return (
     <FormField meta={meta}>
@@ -620,11 +615,11 @@ const PluralInput = ({
         <div className="flex flex-wrap gap-3">
           {pluralForms.map((form) => (
             <button
-              key={form.suffix}
+              key={form.key}
               type="button"
-              onClick={() => setActiveForm(form.suffix)}
+              onClick={() => setActiveForm(form.key)}
               className={`btn-state-layer flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-label-large transition-all duration-300 ${
-                activeForm === form.suffix
+                activeForm === form.key
                   ? 'bg-primary text-on-primary'
                   : 'bg-surface-container text-primary hover:bg-surface-container-high'
               }`}
@@ -638,19 +633,16 @@ const PluralInput = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-label-medium text-on-surface-variant">
             <span>📝</span>
-            <span>
-              Anahtar: {baseKey}
-              {activeForm}
-            </span>
+            <span>Form: {activeForm}</span>
             <span className="text-label-small opacity-70">
-              ({pluralForms.find((f) => f.suffix === activeForm)?.description})
+              ({pluralForms.find((f) => f.key === activeForm)?.description})
             </span>
           </div>
 
           <textarea
             value={value[activeForm] || ''}
             onChange={(e) => handlePluralChange(activeForm, e.target.value)}
-            placeholder={`${pluralForms.find((f) => f.suffix === activeForm)?.label} durumu için mesaj... {${meta.variable}} kullanabilirsiniz`}
+            placeholder={`${pluralForms.find((f) => f.key === activeForm)?.label} durumu için mesaj... {{${meta.variable}}} kullanabilirsiniz`}
             rows={3}
             className="input-base min-h-[80px] border-outline/30"
           />
@@ -660,7 +652,6 @@ const PluralInput = ({
   )
 }
 
-// 4. CONTEXTUAL INPUT - Butonlar + textarea (değişkenler: meta.variables)
 const ContextualInput = ({
   meta,
   value,
