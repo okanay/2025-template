@@ -1,0 +1,42 @@
+{
+  "root": {
+    "title": "Guide Of Dubai | Blog - Book Hotels, Tours & Flights Easily",
+    "description": "Plan your Dubai trip in one app – book flights, hotels, tours, and activities with ease. Trusted by travelers for seamless Dubai experiences."
+  },
+  "notFound": {
+    "title": "Page Not Found | Guide Of Dubai - Return to Dubai Travel Planning",
+    "description": "The page you're looking for doesn't exist. Return to Guide Of Dubai to continue planning your perfect Dubai trip with our booking services."
+  },
+  "error": {
+    "title": "Error Occurred | Guide Of Dubai - Continue Your Travel Planning",
+    "description": "An error occurred. Return to Guide Of Dubai to continue your travel planning and explore our booking services."
+  },
+  "auth": {
+    "root": {
+      "title": "Account Access | Guide Of Dubai - Join Our Travel Community",
+      "description": "Access your Guide Of Dubai account to share travel experiences, save favorite destinations, and contribute to our trusted travel community."
+    },
+    "login": {
+      "title": "Login | Guide Of Dubai - Access Your Travel Account",
+      "description": "Login to your Guide Of Dubai account to manage bookings, share travel stories, and access exclusive Dubai travel insights and deals."
+    },
+    "register": {
+      "title": "Join Guide Of Dubai | Register - Start Your Dubai Journey",
+      "description": "Create your free Guide Of Dubai account to share travel experiences, access exclusive content, and join thousands of Dubai travelers worldwide."
+    },
+    "editor": {
+      "root": {
+        "title": "Content Editor | Guide Of Dubai - Share Your Dubai Experience",
+        "description": "Edit and publish your Dubai travel stories with Guide Of Dubai's content editor. Help fellow travelers discover the best of Dubai."
+      },
+      "create": {
+        "title": "Create Dubai Blog | Guide Of Dubai - Share Your Travel Story",
+        "description": "Create and publish your Dubai travel blog with Guide Of Dubai. Share insider tips, reviews, and experiences with our global travel community."
+      },
+      "edit": {
+        "title": "Edit Your Dubai Blog | Guide Of Dubai - Update Your Story",
+        "description": "Edit your published Dubai travel blog on Guide Of Dubai. Update your experiences and help travelers plan their perfect Dubai adventure."
+      }
+    }
+  }
+}

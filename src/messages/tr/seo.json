@@ -1,0 +1,42 @@
+{
+  "root": {
+    "title": "Guide Of Dubai | Blog - Otel, Tur ve Uçak Bileti Kolayca Rezerve Edin",
+    "description": "Dubai seyahatinizi tek uygulamada planlayın – uçak bileti, otel, tur ve aktivite rezervasyonlarınızı kolayca yapın. Seyahat severler tarafından güvenilen Dubai deneyimleri."
+  },
+  "notFound": {
+    "title": "Sayfa Bulunamadı | Guide Of Dubai - Dubai Seyahat Planlamasına Dön",
+    "description": "Aradığınız sayfa mevcut değil. Guide Of Dubai'ye geri dönerek mükemmel Dubai seyahatinizi planlamaya devam edin ve rezervasyon hizmetlerimizi kullanın."
+  },
+  "error": {
+    "title": "Hata Oluştu | Guide Of Dubai - Seyahat Planlamanıza Devam Edin",
+    "description": "Bir hata oluştu. Guide Of Dubai'ye geri dönerek seyahat planlamanıza devam edin ve rezervasyon hizmetlerimizi keşfedin."
+  },
+  "auth": {
+    "root": {
+      "title": "Hesap Erişimi | Guide Of Dubai - Seyahat Topluluğumuza Katılın",
+      "description": "Guide Of Dubai hesabınıza erişin, seyahat deneyimlerinizi paylaşın, favori destinasyonlarınızı kaydedin ve güvenilir seyahat topluluğumuza katkıda bulunun."
+    },
+    "login": {
+      "title": "Giriş Yap | Guide Of Dubai - Seyahat Hesabınıza Erişin",
+      "description": "Guide Of Dubai hesabınıza giriş yapın, rezervasyonlarınızı yönetin, seyahat hikayelerinizi paylaşın ve özel Dubai seyahat ipuçları ile fırsatlara erişin."
+    },
+    "register": {
+      "title": "Guide Of Dubai'ye Katıl | Kayıt Ol - Dubai Yolculuğunuzu Başlatın",
+      "description": "Ücretsiz Guide Of Dubai hesabınızı oluşturun, seyahat deneyimlerinizi paylaşın, özel içeriklere erişin ve dünya çapında binlerce Dubai seyahat severine katılın."
+    },
+    "editor": {
+      "root": {
+        "title": "İçerik Editörü | Guide Of Dubai - Dubai Deneyiminizi Paylaşın",
+        "description": "Guide Of Dubai'nin içerik editörü ile Dubai seyahat hikayelerinizi düzenleyin ve yayınlayın. Diğer seyahat severlerin Dubai'nin en güzel yerlerini keşfetmesine yardım edin."
+      },
+      "create": {
+        "title": "Dubai Blog Oluştur | Guide Of Dubai - Seyahat Hikayenizi Paylaşın",
+        "description": "Guide Of Dubai ile Dubai seyahat blogunuzu oluşturun ve yayınlayın. İç bilgilerinizi, yorumlarınızı ve deneyimlerinizi küresel seyahat topluluğumuzla paylaşın."
+      },
+      "edit": {
+        "title": "Dubai Blogunuzu Düzenleyin | Guide Of Dubai - Hikayenizi Güncelleyin",
+        "description": "Guide Of Dubai'de yayınlanan Dubai seyahat blogunuzu düzenleyin. Deneyimlerinizi güncelleyin ve seyahat severlerin mükemmel Dubai maceralarını planlamasına yardım edin."
+      }
+    }
+  }
+}

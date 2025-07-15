@@ -48,7 +48,7 @@ export function EditFile() {
 
   const handleGoBack = () =>
     navigate({
-      to: '/$lang/editor/i18n',
+      to: '/$lang/editor/i18n/select',
       params: {
         lang: 'tr',
       },
