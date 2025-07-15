@@ -1,3 +1,70 @@
 {
-  "title" : "test"
+  "_meta": {
+    "site_title": {
+      "description": "Sitenin tarayıcı sekmesinde görünecek ana başlığı.",
+      "validation": { "required": true, "minLength": 5, "maxLength": 60 }
+    },
+    "hero": {
+      "description": "Sitenin en üstündeki karşılama bölümü.",
+      "defaultOpen": true
+    },
+    "faq": {
+      "description": "Sıkça sorulan sorular ve cevapları.",
+      "defaultOpen": true
+    }
+  },
+  "site_title": "My Awesome Project",
+  "hero": {
+    "_meta": {
+      "title": { "description": "Ana sayfa başlığı. Kısa ve dikkat çekici olmalı." },
+      "subtitle": { "description": "Başlığın altındaki açıklama metni.", "type": "textarea" },
+      "show_badge": {
+        "type": "boolean",
+        "description": "Kahraman bölümünde özel bir etiket gösterilsin mi?"
+      }
+    },
+    "title": "Welcome to the Future",
+    "subtitle": "Discover a new way of managing content.",
+    "show_badge": true,
+    "badge_text": "v3.0 Live"
+  },
+  "faq": {
+    "_meta": {
+      "title": { "description": "SSS bölümünün başlığı." },
+      "questions": {
+        "description": "Sıkça Sorulan Sorular bölümü. Yeni soru ekleyip çıkarabilirsiniz.",
+        "type": "repeater",
+        "item_template": {
+          "_meta": { "a": { "type": "textarea" } },
+          "q": "New Question",
+          "a": "New Answer"
+        }
+      }
+    },
+    "title": "Frequently Asked Questions",
+    "questions": [
+      {
+        "_meta": {
+          "q": { "description": "Soru metni." },
+          "a": { "description": "Cevap metni.", "type": "textarea" },
+          "initialOpen": {
+            "type": "boolean",
+            "description": "Bu soru editörde başlangıçta açık mı olsun?"
+          }
+        },
+        "q": "What is this?",
+        "a": "This is a dynamic, schema-driven JSON editor.",
+        "initialOpen": true
+      },
+      {
+        "_meta": {
+          "q": { "description": "Soru metni." },
+          "a": { "description": "Cevap metni.", "type": "textarea" }
+        },
+        "q": "How does it work?",
+        "a": "It uses a recursive component to render UI based on a JSON schema.",
+        "initialOpen": false
+      }
+    ]
+  }
 }
