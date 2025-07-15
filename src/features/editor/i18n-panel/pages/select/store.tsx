@@ -2,12 +2,17 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react'
 import { createStore, StoreApi, useStore } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { toast } from 'sonner'
-import { ns, defaultNS } from 'src/messages/index'
+import { ns_dictionary } from 'src/messages/index'
 import { LANGUAGES_VALUES } from 'src/i18n/config'
 
-// export const defaultNS = 'translation' EXAMPLE
-// export const ns = ['translation', 'common', 'globals'] EXAMPLE
+// ns = ['translation', 'common', 'globals']
 // LANGUAGES_VALUES [ 'tr', 'en' ]
+// export const ns_dictionary = [
+//   { label: 'Çeviri', ns: ns[0] },
+//   { label: 'Ortak', ns: ns[1] },
+//   { label: 'Genel', ns: ns[2] },
+// ]
+
 interface DataState {}
 
 type Props = PropsWithChildren & {}
