@@ -40,7 +40,7 @@ export const I18nJsonEditor: React.FC = () => {
             onClick={onReset}
             className="btn-state-layer rounded-full px-4 py-2 text-label-large text-on-surface-variant"
           >
-            Sıfırla
+            Değişikleri Geri Al
           </button>
           <button
             onClick={onSave}
@@ -53,7 +53,7 @@ export const I18nJsonEditor: React.FC = () => {
       <textarea
         value={displayText}
         onChange={isZen ? handleZenChange : (e) => onChange(e.target.value)}
-        className={`input-base min-h-[500px] font-mono text-sm ${error ? 'border-error' : 'border-outline/30'}`}
+        className={`input-base min-h-[600px] font-mono text-sm ${error ? 'border-error' : 'border-outline/30'}`}
         spellCheck="false"
       />
       {error && (

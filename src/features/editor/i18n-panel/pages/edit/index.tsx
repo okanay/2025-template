@@ -4,9 +4,7 @@ import { useEffect } from 'react'
 import { I18nInputMode } from './components/input-mode'
 import { I18nJsonEditor } from './components/json-mode'
 import { ModeButton } from './components/mode-button'
-
 import type { AllMetaTypes, I18nPayload } from 'src/messages/schema'
-import globals from 'src/messages/en/globals.json'
 import { useI18nPanel } from './store'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -90,7 +88,7 @@ export function EditFile() {
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6" data-zen-mode={isZen}>
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-4xl">
         <header className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
             <button
@@ -158,7 +156,7 @@ export function EditFile() {
           </div>
 
           {/* UI Editor */}
-          <div className={viewMode === 'ui' ? 'flex flex-col gap-4' : 'hidden'}>
+          <div className={viewMode === 'ui' ? 'flex flex-col' : 'hidden'}>
             {rootFieldKeys.map((fieldKey) => (
               <I18nInputMode
                 key={fieldKey}

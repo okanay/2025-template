@@ -15,7 +15,7 @@ import {
 import { Link } from 'src/i18n/link'
 import { useLanguage } from 'src/i18n/hooks/use-language'
 import { useI18nSelect } from './store'
-import { ns_dictionary } from 'src/messages/index'
+import { ns_dictionary, TranslationNS } from 'src/messages/index'
 import { SUPPORTED_LANGUAGES } from 'src/i18n/config'
 
 export const SelectFilePage = () => {
@@ -33,12 +33,12 @@ export const SelectFilePage = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-4xl">
         {/* Header */}
         <header className="mb-8 text-center">
-          <h1 className="mb-2 text-headline-large text-on-background">i18n Yönetim Paneli</h1>
+          <h1 className="mb-2 text-headline-large text-on-background">Çeviri Yönetim Paneli</h1>
           <p className="text-body-large text-on-surface-variant">
-            Çeviri dosyalarınızı düzenleyin ve değişikliklerinizi yayınlayın
+            Çeviri dosyalarını kolayca düzenleyin ve güncellemelerinizi yayınlayın
           </p>
         </header>
 
@@ -191,16 +191,16 @@ const FileCard = ({
   currentLang: string
   changeStatus: string | null
 }) => {
-  const getNamespaceIcon = (ns: string) => {
+  const getNamespaceIcon = (ns: TranslationNS) => {
     switch (ns) {
       case 'translation':
-        return BookOpen
-      case 'common':
-        return Hash
-      case 'globals':
-        return Globe
-      default:
         return FileText
+      case 'common':
+        return BookOpen
+      case 'error-pages':
+        return AlertCircle
+      default:
+        return Globe
     }
   }
 
@@ -250,8 +250,9 @@ const FileCard = ({
                   </span>
                 )}
               </div>
-              <p className="text-body-medium text-on-surface-variant">{namespace.ns}.json</p>
-              <p className="text-body-small text-on-surface-variant">src/messages/{language}/</p>
+              <p className="text-body-small text-on-surface-variant">
+                src/messages/{language}/{namespace.ns}.json
+              </p>
             </div>
           </div>
 
@@ -259,20 +260,6 @@ const FileCard = ({
             className="text-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-primary"
             size={20}
           />
-        </div>
-
-        <div className="mt-4 flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-surface-container">
-            <span className="text-xs font-medium text-on-surface-variant">
-              {language.toUpperCase()}
-            </span>
-          </div>
-
-          <div className="h-1 w-1 rounded-full bg-outline" />
-
-          <span className="text-label-small text-on-surface-variant">
-            {hasChanges ? 'Değişiklik mevcut' : 'Düzenlemek için tıklayın'}
-          </span>
         </div>
       </div>
     </Link>

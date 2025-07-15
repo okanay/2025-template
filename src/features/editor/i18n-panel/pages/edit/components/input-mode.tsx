@@ -281,7 +281,7 @@ const SectionComponent = ({
   return (
     <details
       open={!meta.collapsed}
-      className="group overflow-hidden rounded-xl border border-outline/20"
+      className="group mb-4 overflow-hidden rounded-xl border border-outline/20"
     >
       <summary className="flex cursor-pointer items-center gap-3 bg-surface-container px-4 py-3 hover:bg-surface-container-high">
         {meta.icon && <span className="text-lg opacity-80">{meta.icon}</span>}
@@ -290,7 +290,7 @@ const SectionComponent = ({
           <ChevronDownIcon size={20} />
         </span>
       </summary>
-      <div className="flex flex-col gap-0 border-t border-outline/20 bg-surface-container-lowest p-4">
+      <div className="flex flex-col border-t border-outline/20 bg-surface-container-lowest p-4">
         {Object.keys(data).map((fieldKey) => {
           if (fieldKey.startsWith('_')) return null
           return (
