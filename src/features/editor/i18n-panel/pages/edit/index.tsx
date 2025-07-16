@@ -145,7 +145,7 @@ export function EditFile() {
           </div>
 
           {/* UI Editor */}
-          <div className={viewMode === 'ui' ? 'flex flex-col' : 'hidden'}>
+          <div className={viewMode === 'ui' ? 'flex flex-col space-y-4' : 'hidden'}>
             {rootFieldKeys.map((fieldKey) => (
               <I18nInputMode
                 key={fieldKey}

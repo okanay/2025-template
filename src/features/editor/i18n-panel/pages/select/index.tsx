@@ -33,34 +33,24 @@ export const SelectFilePage = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl space-y-8">
         {/* Header */}
-        <header className="mb-8 text-center">
-          <h1 className="mb-2 text-headline-large text-on-background">Çeviri Yönetim Paneli</h1>
-          <p className="text-body-large text-on-surface-variant">
+        <header className="space-y-3 text-center">
+          <h1 className="text-display-small font-medium text-on-background">
+            Çeviri Yönetim Paneli
+          </h1>
+          <p className="mx-auto max-w-2xl text-body-large text-on-surface-variant">
             Çeviri dosyalarını kolayca düzenleyin ve güncellemelerinizi yayınlayın
           </p>
         </header>
 
         {/* Draft Status Card */}
-        <div className="mb-8 rounded-xl border border-outline/20 bg-surface-container p-6">
+        <Card className="p-6" elevation={2}>
           <div className="flex items-start justify-between">
-            <div className="flex items-start gap-2">
-              <div
-                className={`mt-1 flex h-12 w-12 items-start justify-center rounded-full ${
-                  draftStatus === 'has-changes' ? 'bg-warning-container' : 'bg-success-container'
-                }`}
-              >
-                {draftStatus === 'loading' ? (
-                  <RefreshCw className="animate-spin text-on-surface-variant" size={24} />
-                ) : draftStatus === 'has-changes' ? (
-                  <AlertCircle className="text-on-warning-container" size={24} />
-                ) : (
-                  <CheckCircle className="text-on-success-container" size={24} />
-                )}
-              </div>
+            <div className="flex items-start gap-4">
+              <StatusIndicator status={draftStatus} isLoading={isLoading} />
 
-              <div>
+              <div className="space-y-1">
                 <h3 className="text-title-large text-on-surface">
                   {draftStatus === 'loading' && 'Durum kontrol ediliyor...'}
                   {draftStatus === 'none' && 'Tüm değişiklikler yayınlandı'}
@@ -74,155 +64,257 @@ export const SelectFilePage = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={checkDraftStatus}
-                disabled={isLoading}
-                className="btn-state-layer rounded-full p-3 text-on-surface-variant hover:bg-surface-container"
-                title="Durumu Yenile"
-              >
-                <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
-              </button>
-
-              {draftStatus === 'has-changes' && (
-                <>
-                  <button
-                    onClick={restartChanges}
-                    disabled={isRestarting}
-                    className="btn-state-layer inline-flex items-center gap-2 rounded-full bg-error-container px-6 py-3 text-label-medium text-on-error-container"
-                  >
-                    <GitBranch size={16} />
-                    {isRestarting ? 'Geri alınıyor...' : 'Değişiklikleri Geri Al'}
-                  </button>
-                  <button
-                    onClick={publishChanges}
-                    disabled={isPublishing}
-                    className="btn-state-layer inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-label-medium text-on-primary"
-                  >
-                    <CheckCircle size={16} />
-                    {isPublishing ? 'Yayınlanıyor...' : 'Yayınla'}
-                  </button>
-                </>
-              )}
-            </div>
+            <ActionButtons
+              draftStatus={draftStatus}
+              isLoading={isLoading}
+              isPublishing={isPublishing}
+              isRestarting={isRestarting}
+              onRefresh={checkDraftStatus}
+              onPublish={publishChanges}
+              onRestart={restartChanges}
+            />
           </div>
 
           {/* Changed Files Summary */}
           {draftStatus === 'has-changes' && changedFiles.length > 0 && (
-            <div className="bg-warning-container/20 mt-6 rounded-lg p-4">
-              <h4 className="mb-3 text-title-small text-on-surface">Değişen Dosyalar:</h4>
-              <div className="flex flex-wrap gap-2">
-                {changedFiles.map((file, index) => (
-                  <div
-                    key={index}
-                    className="inline-flex items-center gap-2 rounded-full bg-surface-container-high px-3 py-1 text-label-small"
-                  >
-                    <ChangeStatusIcon status={file.status} />
-                    <span className="text-on-surface">
-                      {file.lang}/{file.ns}.json
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ChangedFilesSummary changedFiles={changedFiles} />
           )}
-        </div>
+        </Card>
 
-        {/* File Selection Grid */}
-        <div className="space-y-8">
-          <h2 className="text-title-large text-on-surface">Düzenlenecek Dosyayı Seçin</h2>
-
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <div key={lang.value} className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Globe className="text-primary" size={24} />
-                <h3 className="text-title-medium text-on-surface">{lang.label}</h3>
-                <span className="rounded-full bg-surface-container px-3 py-1 text-label-medium text-on-surface-variant">
-                  {lang.locale}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
-                {ns_dictionary.map((nsItem) => (
-                  <FileCard
-                    key={`${lang.value}-${nsItem.ns}`}
-                    language={lang.value}
-                    namespace={nsItem}
-                    currentLang={language.value}
-                    changeStatus={getFileChangeStatus(changedFiles, lang.value, nsItem.ns)}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* File Selection Section */}
+        <div className="space-y-6">
+          <div className="space-y-8">
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <LanguageSection
+                key={lang.value}
+                language={lang}
+                changedFiles={changedFiles}
+                currentLang={language.value}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-// Helper functions
-const getFileChangeStatus = (changedFiles: any[], lang: string, ns: string) => {
-  return changedFiles.find((file) => file.lang === lang && file.ns === ns)?.status || null
-}
+//==========================================================================
+// YARDIMCI BİLEŞENLER
+//==========================================================================
 
-const ChangeStatusIcon = ({ status }: { status: string }) => {
-  switch (status) {
-    case 'added':
-      return <Plus className="text-success" size={12} />
-    case 'modified':
-      return <Edit3 className="text-warning" size={12} />
-    case 'deleted':
-      return <Trash2 className="text-error" size={12} />
-    default:
-      return null
-  }
-}
-
-// Enhanced Change Status Component
-const ChangeStatusBadge = ({ status }: { status: string | null }) => {
-  if (!status) return null
-
-  const statusConfig = {
-    added: {
-      icon: Plus,
-      label: 'Yeni dosya',
-      description: 'Bu dosya yeni eklendi',
-      className: 'bg-success-container text-on-success-container border-success/30',
-      iconClassName: 'text-success',
-    },
-    modified: {
-      icon: Edit3,
-      label: 'Düzenlendi',
-      description: 'Bu dosyada değişiklikler var',
-      className: 'bg-warning-container text-on-warning-container border-warning/30',
-      iconClassName: 'text-warning',
-    },
-    deleted: {
-      icon: Trash2,
-      label: 'Silindi',
-      description: 'Bu dosya silinmek üzere',
-      className: 'bg-error-container text-on-error-container border-error/30',
-      iconClassName: 'text-error',
-    },
-  }
-
-  const config = statusConfig[status as keyof typeof statusConfig]
-  if (!config) return null
-
-  const Icon = config.icon
-
+const Card = ({
+  children,
+  className = '',
+  elevation = 1,
+}: {
+  children: React.ReactNode
+  className?: string
+  elevation?: 0 | 1 | 2 | 3 | 4 | 5
+}) => {
   return (
-    <div
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${config.className}`}
-    >
-      <Icon size={12} className={config.iconClassName} />
-      <span>{config.label}</span>
+    <div className={`rounded-xl border border-outline-variant/20 bg-surface ${className}`}>
+      {children}
     </div>
   )
 }
 
-// Enhanced File Card Component
+const Button = ({
+  children,
+  onClick,
+  variant = 'filled',
+  size = 'medium',
+  disabled = false,
+  className = '',
+  ...props
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  variant?: 'filled' | 'outlined' | 'text' | 'tonal'
+  size?: 'small' | 'medium' | 'large'
+  disabled?: boolean
+  className?: string
+}) => {
+  const baseClasses =
+    'btn-state-layer inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-disabled'
+
+  const sizeClasses = {
+    small: 'px-3 py-1.5 text-label-medium min-h-8',
+    medium: 'px-6 py-2.5 text-label-large min-h-10',
+    large: 'px-8 py-3 text-title-small min-h-12',
+  }
+
+  const variantClasses = {
+    filled: 'bg-primary text-on-primary shadow-sm hover:shadow-md',
+    outlined: 'border border-outline bg-surface text-primary hover:bg-primary-container/20',
+    text: 'text-primary hover:bg-primary-container/20',
+    tonal: 'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80',
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
+
+const StatusIndicator = ({ status, isLoading }: { status: string; isLoading: boolean }) => {
+  const getStatusConfig = () => {
+    if (isLoading) {
+      return {
+        bgClass: 'bg-surface-container',
+        iconClass: 'text-on-surface-variant',
+        icon: RefreshCw,
+        spinning: true,
+      }
+    }
+
+    switch (status) {
+      case 'has-changes':
+        return {
+          bgClass: 'bg-warning-container',
+          iconClass: 'text-on-warning-container',
+          icon: AlertCircle,
+          spinning: false,
+        }
+      default:
+        return {
+          bgClass: 'bg-success-container',
+          iconClass: 'text-on-success-container',
+          icon: CheckCircle,
+          spinning: false,
+        }
+    }
+  }
+
+  const config = getStatusConfig()
+  const Icon = config.icon
+
+  return (
+    <div className={`flex h-12 w-12 items-center justify-center rounded-full ${config.bgClass}`}>
+      <Icon className={`${config.iconClass} ${config.spinning ? 'animate-spin' : ''}`} size={24} />
+    </div>
+  )
+}
+
+const ActionButtons = ({
+  draftStatus,
+  isLoading,
+  isPublishing,
+  isRestarting,
+  onRefresh,
+  onPublish,
+  onRestart,
+}: {
+  draftStatus: string
+  isLoading: boolean
+  isPublishing: boolean
+  isRestarting: boolean
+  onRefresh: () => void
+  onPublish: () => void
+  onRestart: () => void
+}) => {
+  return (
+    <div className="flex items-center gap-3">
+      <Button
+        onClick={onRefresh}
+        disabled={isLoading}
+        variant="text"
+        size="small"
+        className="!rounded-full !p-3"
+      >
+        <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
+      </Button>
+
+      {draftStatus === 'has-changes' && (
+        <>
+          <Button
+            onClick={onRestart}
+            disabled={isRestarting}
+            variant="tonal"
+            size="medium"
+            className="bg-error-container text-on-error-container hover:bg-error-container/80"
+          >
+            <GitBranch size={16} />
+            {isRestarting ? 'Geri alınıyor...' : 'Değişiklikleri Geri Al'}
+          </Button>
+
+          <Button onClick={onPublish} disabled={isPublishing} variant="filled" size="medium">
+            <CheckCircle size={16} />
+            {isPublishing ? 'Yayınlanıyor...' : 'Yayınla'}
+          </Button>
+        </>
+      )}
+    </div>
+  )
+}
+
+const ChangedFilesSummary = ({ changedFiles }: { changedFiles: any[] }) => {
+  return (
+    <div className="mt-6 rounded-xl border border-tertiary-container/50 bg-tertiary-container/20 p-4">
+      <h4 className="mb-3 text-title-small font-medium text-on-surface">Değişen Dosyalar:</h4>
+      <div className="flex flex-wrap gap-2">
+        {changedFiles.map((file, index) => (
+          <div
+            key={index}
+            className="inline-flex items-center gap-2 rounded-full border border-outline-variant/30 bg-surface-container px-3 py-1.5"
+          >
+            <ChangeStatusIcon status={file.status} />
+            <span className="text-label-medium text-on-surface">
+              {file.lang}/{file.ns}.json
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const LanguageSection = ({
+  language,
+  changedFiles,
+  currentLang,
+}: {
+  language: any
+  changedFiles: any[]
+  currentLang: string
+}) => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container">
+          <Globe className="text-on-primary-container" size={20} />
+        </div>
+        <div className="flex items-center gap-3">
+          <h3 className="text-title-large font-medium text-on-surface">{language.label}</h3>
+          <div className="rounded-full bg-surface-container px-3 py-1">
+            <span className="font-mono text-label-medium text-on-surface-variant">
+              {language.locale}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+        {ns_dictionary.map((nsItem) => (
+          <FileCard
+            key={`${language.value}-${nsItem.ns}`}
+            language={language.value}
+            namespace={nsItem}
+            currentLang={currentLang}
+            changeStatus={getFileChangeStatus(changedFiles, language.value, nsItem.ns)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const FileCard = ({
   language,
   namespace,
@@ -234,125 +326,72 @@ const FileCard = ({
   currentLang: string
   changeStatus: string | null
 }) => {
-  const getNamespaceIcon = (ns: string) => {
-    switch (ns) {
-      case 'translation':
-        return FileText
-      case 'common':
-        return BookOpen
-      case 'error-pages':
-        return AlertCircle
-      default:
-        return Globe
-    }
-  }
-
   const Icon = getNamespaceIcon(namespace.ns)
   const hasChanges = changeStatus !== null
-
-  // Status-based styling
-  const getCardStyling = () => {
-    if (!hasChanges) {
-      return {
-        borderClass: 'border-outline/20',
-        bgClass: 'bg-surface',
-        iconBgClass: 'bg-primary-container',
-        iconTextClass: 'text-on-primary-container',
-      }
-    }
-
-    switch (changeStatus) {
-      case 'added':
-        return {
-          borderClass: 'border-success/30',
-          bgClass: 'bg-success-container/5',
-          iconBgClass: 'bg-success-container',
-          iconTextClass: 'text-on-success-container',
-        }
-      case 'modified':
-        return {
-          borderClass: 'border-warning/30',
-          bgClass: 'bg-warning-container/5',
-          iconBgClass: 'bg-warning-container',
-          iconTextClass: 'text-on-warning-container',
-        }
-      case 'deleted':
-        return {
-          borderClass: 'border-error/30',
-          bgClass: 'bg-error-container/5',
-          iconBgClass: 'bg-error-container',
-          iconTextClass: 'text-on-error-container',
-        }
-      default:
-        return {
-          borderClass: 'border-outline/20',
-          bgClass: 'bg-surface',
-          iconBgClass: 'bg-primary-container',
-          iconTextClass: 'text-on-primary-container',
-        }
-    }
-  }
-
-  const styling = getCardStyling()
+  const styling = getCardStyling(changeStatus)
 
   return (
     <Link
       to="/$lang/editor/i18n/edit"
       params={{ lang: currentLang }}
       search={{ lang: language, ns: namespace.ns }}
-      className="group relative block"
+      className="group block"
     >
-      <div
-        className={`rounded-xl border bg-surface-container p-6 transition-all duration-300 ${styling.borderClass} ${styling.bgClass} group-focus:ring-2 group-focus:ring-primary/20 hover:border-primary/30 hover:bg-surface-container hover:elevated-2 hover:shadow-lg hover:shadow-primary/5`}
+      <Card
+        className={`p-6 transition-all duration-300 ${styling.borderClass} ${styling.bgClass} group-hover:border-primary/40 group-hover:elevated-3 group-hover:shadow-lg group-hover:shadow-primary/5 group-focus:ring-2 group-focus:ring-primary/20`}
+        elevation={hasChanges ? 2 : 1}
       >
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            {/* Enhanced Icon Container */}
+          <div className="flex flex-1 items-center gap-4">
+            {/* Icon Container */}
             <div
-              className={`flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 ${styling.iconBgClass}`}
+              className={`flex h-14 w-14 items-center justify-center rounded-xl ${styling.iconBgClass}`}
             >
-              <Icon className={`${styling.iconTextClass} transition-all duration-300`} size={28} />
+              <Icon className={`${styling.iconTextClass}`} size={28} />
             </div>
 
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center gap-3">
-                <h4 className="text-title-large text-on-surface transition-colors duration-300 group-hover:text-primary">
+            <div className="flex-1 space-y-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <h4 className="text-title-medium font-medium text-on-surface transition-colors group-hover:text-primary">
                   {namespace.label}
                 </h4>
                 <ChangeStatusBadge status={changeStatus} />
               </div>
 
-              <p className="text-body-medium text-on-surface-variant">{namespace.ns}.json</p>
-
-              <p className="text-body-small text-on-surface-variant/70">src/messages/{language}/</p>
+              <div className="space-y-1">
+                <p className="font-mono text-body-medium text-on-surface-variant">
+                  {namespace.ns}.json
+                </p>
+                <p className="text-body-small text-on-surface-variant/70">
+                  src/messages/{language}/
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Enhanced Arrow */}
-          <div className="flex flex-col items-center gap-2">
+          {/* Arrow & Status */}
+          <div className="ml-2 flex flex-col items-center gap-3">
             <ArrowRight
               className="text-on-surface-variant transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110 group-hover:text-primary"
               size={24}
             />
-            {hasChanges && <div className="flex h-2 w-2 rounded-full bg-current opacity-50" />}
+            {hasChanges && <div className="bg-warning h-2 w-2 animate-pulse rounded-full" />}
           </div>
         </div>
 
-        {/* Bottom Status Bar */}
-        <div className="mt-4 flex items-center justify-between">
+        {/* Footer */}
+        <div className="mt-4 flex items-center justify-between border-t border-outline-variant/20 pt-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-7 w-12 items-center justify-center rounded-md bg-surface">
+            <div className="flex h-6 w-12 items-center justify-center rounded-md bg-surface-container-low">
               <span className="text-xs font-medium text-on-surface-variant">
                 {language.toUpperCase()}
               </span>
             </div>
 
             {hasChanges && (
-              <div className="flex items-center gap-1.5">
-                <Clock size={12} className="text-on-surface-variant/50" />
-                <span className="text-label-small text-on-surface-variant/70">
-                  Yayınlanmayı bekliyor
-                </span>
+              <div className="flex items-center gap-1.5 text-on-surface-variant/70">
+                <Clock size={12} />
+                <span className="text-label-small">Yayınlanmayı bekliyor</span>
               </div>
             )}
           </div>
@@ -361,7 +400,112 @@ const FileCard = ({
             {hasChanges ? 'Değişiklikleri gör' : 'Düzenlemek için tıkla'}
           </span>
         </div>
-      </div>
+      </Card>
     </Link>
+  )
+}
+
+const ChangeStatusBadge = ({ status }: { status: string | null }) => {
+  if (!status) return null
+
+  const statusConfigs = {
+    added: {
+      icon: Plus,
+      label: 'Yeni',
+      className: 'bg-success-container text-on-success-container border-success/30',
+    },
+    modified: {
+      icon: Edit3,
+      label: 'Düzenlendi',
+      className: 'bg-warning-container text-on-warning-container border-warning/30',
+    },
+    deleted: {
+      icon: Trash2,
+      label: 'Silindi',
+      className: 'bg-error-container text-on-error-container border-error/30',
+    },
+  }
+
+  const config = statusConfigs[status as keyof typeof statusConfigs]
+  if (!config) return null
+
+  const Icon = config.icon
+
+  return (
+    <div
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${config.className}`}
+    >
+      <Icon size={12} />
+      <span>{config.label}</span>
+    </div>
+  )
+}
+
+const ChangeStatusIcon = ({ status }: { status: string }) => {
+  const icons = {
+    added: <Plus className="text-success" size={12} />,
+    modified: <Edit3 className="text-warning" size={12} />,
+    deleted: <Trash2 className="text-error" size={12} />,
+  }
+
+  return icons[status as keyof typeof icons] || null
+}
+
+//==========================================================================
+// HELPER FUNCTIONS
+//==========================================================================
+
+const getFileChangeStatus = (changedFiles: any[], lang: string, ns: string) => {
+  return changedFiles.find((file) => file.lang === lang && file.ns === ns)?.status || null
+}
+
+const getNamespaceIcon = (ns: string) => {
+  const icons = {
+    translation: FileText,
+    common: BookOpen,
+    'error-pages': AlertCircle,
+    default: Globe,
+  }
+  return icons[ns as keyof typeof icons] || icons.default
+}
+
+const getCardStyling = (changeStatus: string | null) => {
+  if (!changeStatus) {
+    return {
+      borderClass: 'border-outline-variant/20',
+      bgClass: 'bg-surface',
+      iconBgClass: 'bg-primary-container',
+      iconTextClass: 'text-on-primary-container',
+    }
+  }
+
+  const stylings = {
+    added: {
+      borderClass: 'border-success/30',
+      bgClass: 'bg-success-container/5',
+      iconBgClass: 'bg-success-container',
+      iconTextClass: 'text-on-success-container',
+    },
+    modified: {
+      borderClass: 'border-warning/30',
+      bgClass: 'bg-warning-container/5',
+      iconBgClass: 'bg-warning-container',
+      iconTextClass: 'text-on-warning-container',
+    },
+    deleted: {
+      borderClass: 'border-error/30',
+      bgClass: 'bg-error-container/5',
+      iconBgClass: 'bg-error-container',
+      iconTextClass: 'text-on-error-container',
+    },
+  }
+
+  return (
+    stylings[changeStatus as keyof typeof stylings] || {
+      borderClass: 'border-outline-variant/20',
+      bgClass: 'bg-surface',
+      iconBgClass: 'bg-primary-container',
+      iconTextClass: 'text-on-primary-container',
+    }
   )
 }

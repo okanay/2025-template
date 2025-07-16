@@ -220,8 +220,6 @@ const FormField = ({
     <div className={`space-y-2 ${className}`}>
       <label className="block text-body-medium font-medium text-on-surface">{meta.label}</label>
 
-      <div className="relative">{children}</div>
-
       {/* Error & Hint Messages */}
       <div className="min-h-fit">
         {error ? (
@@ -236,6 +234,8 @@ const FormField = ({
           </div>
         ) : null}
       </div>
+
+      <div className="relative">{children}</div>
     </div>
   )
 }
@@ -251,7 +251,7 @@ const Card = ({
 }) => {
   return (
     <div
-      className={`mb-6 rounded-xl border border-surface-container-highest bg-surface ${className}`}
+      className={`mb-4 rounded-xl border border-surface-container-highest bg-surface ${className}`}
     >
       {children}
     </div>
@@ -340,10 +340,10 @@ const RepeaterComponent = ({
   }
 
   return (
-    <FormField meta={meta} className="space-y-4">
-      <Card className="space-y-4 p-6">
+    <FormField meta={meta} className="space-y-0">
+      <Card className="p-6">
         {/* Repeater Header */}
-        <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+        <div className="mb-2 flex items-center justify-between border-b border-outline-variant/20 pb-2">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
               <span className="text-label-medium font-bold">{(items || []).length}</span>
@@ -360,9 +360,9 @@ const RepeaterComponent = ({
         {/* Repeater Items */}
         <div className="space-y-4">
           {(items || []).map((item, index) => (
-            <Card key={index} className="relative p-4" elevation={0}>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex space-y-4">
+            <Card key={index} className="relative px-4 py-2" elevation={0}>
+              <div className="flex items-start justify-between">
+                <div className="flex flex-1 flex-col space-y-4">
                   {Object.keys(meta.fields).map((fieldKey) => (
                     <I18nInputMode
                       key={fieldKey}
@@ -377,9 +377,9 @@ const RepeaterComponent = ({
                   onClick={() => handleRemoveItem(index)}
                   variant="text"
                   size="small"
-                  className="mt-1 shrink-0 text-error hover:bg-error/hover"
+                  className="!absolute -top-2 -right-2 rounded-full bg-error/16 elevated-1 !text-error backdrop-blur-sm hover:!bg-error/20"
                 >
-                  <TrashIcon size={16} />
+                  <TrashIcon className="size-3 shrink-0" />
                 </Button>
               </div>
             </Card>
@@ -539,7 +539,7 @@ const BooleanToggle = ({
         role="switch"
         aria-checked={value}
         onClick={() => onUpdate(!value)}
-        className={`btn-state-layer relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ${
+        className={`btn-state-layer relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ${
           value ? 'bg-primary' : 'bg-outline'
         }`}
       >
@@ -574,7 +574,7 @@ const SelectInput = ({
       <select
         value={value}
         onChange={(e) => onUpdate(e.target.value)}
-        className="input-base appearance-none pr-10"
+        className="input-base appearance-none border-outline/30 pr-10"
       >
         {meta.options.map((option) => {
           const optValue = typeof option === 'string' ? option : option.value
@@ -620,7 +620,7 @@ const RadioInput = ({
         {options.map((opt) => (
           <label
             key={opt.value}
-            className={`btn-state-layer flex cursor-pointer items-center gap-3 rounded-xl border-2 p-4 transition-all duration-200 ${
+            className={`btn-state-layer flex cursor-pointer items-center gap-3 rounded-xl border-2 px-4 py-2 transition-all duration-200 ${
               opt.isChecked
                 ? 'border-primary bg-primary-container text-on-primary-container'
                 : 'border-outline-variant bg-surface hover:bg-surface-container-low'
@@ -634,7 +634,7 @@ const RadioInput = ({
             >
               {opt.isChecked && <div className="h-2 w-2 rounded-full bg-on-primary" />}
             </div>
-            <span className="text-body-medium font-medium">{opt.label}</span>
+            <span className="text-label-medium font-medium">{opt.label}</span>
             <input
               type="radio"
               value={opt.value}
