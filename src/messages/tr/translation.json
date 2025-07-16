@@ -1,1 +1,389 @@
-{"_meta":{"type":"global","_schemaVersion":"1.2.0","_locale":"tr-TR","_lastModified":"2025-01-16T10:30:00Z"},"_authentication":{"type":"section","label":"Kimlik Doğrulama","icon":"🔐","collapsed":false},"authentication":{"login_title":"Sisteme Giriş Yapın (EDİTLENDİ)","_login_title":{"type":"text","label":"Giriş Başlığı","placeholder":"Örn: Hoş Geldiniz","required":true,"minLength":5,"maxLength":50,"hint":"Giriş sayfasında görünen ana başlık"},"email_placeholder":"E-posta adresinizi girin","_email_placeholder":{"type":"email","label":"E-posta Placeholder","placeholder":"Örn: ornek@email.com","required":true},"remember_me":true,"_remember_me":{"type":"boolean","label":"Beni Hatırla Özelliği","description":"Kullanıcıların oturum bilgilerini hatırlama seçeneği","hint":"Güvenlik nedeniyle dikkatli kullanın"},"login_button":"Giriş Yap","_login_button":{"type":"text","label":"Giriş Butonu Metni","required":true,"maxLength":20}},"_ui_settings":{"type":"section","label":"Arayüz Ayarları","icon":"🖥️","collapsed":false},"ui_settings":{"theme_mode":"auto","_theme_mode":{"type":"radio","label":"Tema Modu","options":[{"label":"Açık Tema","value":"light"},{"label":"Koyu Tema","value":"dark"},{"label":"Sistem Teması","value":"auto"}],"required":true},"language":"tr","_language":{"type":"select","label":"Dil Seçimi","options":[{"label":"Türkçe","value":"tr"},{"label":"English","value":"en"},{"label":"Deutsch","value":"de"},{"label":"Français","value":"fr"}],"required":true,"hint":"Arayüz dili değişikliği sayfayı yeniler"},"animations_enabled":true,"_animations_enabled":{"type":"boolean","label":"Animasyonları Etkinleştir","description":"Sayfa geçişleri ve hover efektleri için animasyonlar","hint":"Performans sorunları yaşıyorsanız kapatabilirsiniz"}},"_colors":{"type":"section","label":"Renk Paleti","icon":"🎨","collapsed":true},"colors":{"brand_color":"#3B82F6","_brand_color":{"type":"color","label":"Marka Ana Rengi","hint":"Sitenizin birincil renk teması"},"accent_color":"#F59E0B","_accent_color":{"type":"color","label":"Vurgu Rengi","hint":"Butonlar ve önemli elementler için"},"danger_color":"#EF4444","_danger_color":{"type":"color","label":"Tehlike Rengi","hint":"Hata mesajları ve silme butonları için"}},"_notifications":{"type":"section","label":"Bildirimler","icon":"🔔","collapsed":true},"notifications":{"email_enabled":true,"_email_enabled":{"type":"boolean","label":"E-posta Bildirimleri","description":"Önemli olaylar için e-posta gönder"},"push_enabled":false,"_push_enabled":{"type":"boolean","label":"Push Bildirimleri","description":"Tarayıcı push bildirimlerini etkinleştir"},"frequency":"real_time","_frequency":{"type":"select","label":"Bildirim Sıklığı","options":[{"label":"Anında","value":"real_time"},{"label":"5 Dakikada Bir","value":"5_minutes"},{"label":"15 Dakikada Bir","value":"15_minutes"},{"label":"Saatte Bir","value":"hourly"}],"hint":"Çok sık bildirim performansı etkileyebilir"}},"stock_messages":{"zero":"Stok tükendi!","one":"Son {{count}} ürün kaldı!","few":"Sadece {{count}} adet kaldı!","other":"{{count}} ürün stokta mevcut"},"_stock_messages":{"type":"plural","label":"Stok Durum Mesajları","variable":"count","required":true,"hint":"Ürün stok durumuna göre dinamik mesajlar"},"order_status":{"pending":"Siparişiniz alındı ve işleme konuluyor. Takip numaranız: {{order_id}}","processing":"Siparişiniz {{customer_name}} adına hazırlanıyor.","shipped":"Siparişiniz kargoya verildi. Takip numarası: {{tracking_number}}","delivered":"Siparişiniz {{customer_name}} adına başarıyla teslim edildi."},"_order_status":{"type":"contextual","label":"Sipariş Durum Mesajları","context_key":"status","contexts":["pending","processing","shipped","delivered"],"variables":["order_id","customer_name","tracking_number"],"hint":"Her sipariş durumu için özelleştirilmiş mesajlar"},"notification_types":{"info":"Bilgi: {{message}}","warning":"Uyarı: {{message}}","error":"Hata: {{message}}","success":"Başarı: {{message}}"},"_notification_types":{"type":"contextual","label":"Bildirim Mesajları","context_key":"type","contexts":["info","warning","error","success"],"variables":["message","user_name","timestamp"],"hint":"Bildirim türüne göre farklı mesaj formatları"},"price_tiers":[{"name":"Bronz Üyelik","discount":5,"min_order":100,"description":"Temel avantajlar ve %5 indirim"},{"name":"Gümüş Üyelik","discount":10,"min_order":250,"description":"Genişletilmiş avantajlar ve %10 indirim"},{"name":"Altın Üyelik","discount":15,"min_order":500,"description":"Premium avantajlar ve %15 indirim"}],"_price_tiers":{"type":"repeater","label":"Fiyat Katmanları","addButton":"Yeni Katman Ekle","min":1,"max":10,"reorderable":true,"openable":true,"itemLabel":"{{name}} - %{{discount}}","fields":{"name":{"type":"text","label":"Katman Adı","required":true,"placeholder":"Örn: VIP Üyelik"},"discount":{"type":"number","label":"İndirim Oranı (%)","min":0,"max":50,"step":1,"required":true},"min_order":{"type":"number","label":"Minimum Sipariş Tutarı","min":0,"step":0.01,"required":true},"description":{"type":"textarea","label":"Katman Açıklaması","placeholder":"Bu katmanın sağladığı avantajları açıklayın...","required":true,"minLength":10,"maxLength":300}},"hint":"Müşteri sadakat programı için farklı fiyat katmanları"},"faq_items":[{"question":"Hesabımı nasıl silebilirim?","answer":"Hesap ayarlarından 'Hesabı Sil' seçeneğini kullanabilirsiniz.","category":"account","is_featured":true},{"question":"Şifremi unuttum, ne yapmalıyım?","answer":"Giriş sayfasındaki 'Şifremi Unuttum' linkine tıklayın.","category":"security","is_featured":false}],"_faq_items":{"type":"repeater","label":"Sık Sorulan Sorular","addButton":"Yeni Soru Ekle","max":20,"reorderable":true,"openable":true,"itemLabel":"{{question}}","fields":{"question":{"type":"text","label":"Soru","required":true,"minLength":10,"maxLength":200,"placeholder":"Müşterilerin sık sorduğu soruyu yazın..."},"answer":{"type":"textarea","label":"Cevap","required":true,"minLength":20,"maxLength":1000,"placeholder":"Sorunun detaylı cevabını yazın..."},"category":{"type":"select","label":"Kategori","options":[{"label":"Hesap","value":"account"},{"label":"Güvenlik","value":"security"},{"label":"Ödeme","value":"payment"},{"label":"Teknik","value":"technical"}],"required":true},"is_featured":{"type":"boolean","label":"Öne Çıkarılsın mı?","description":"Ana sayfada gösterilecek önemli sorular"}},"hint":"Müşteri destek yükünü azaltmak için kapsamlı FAQ listesi oluşturun"},"simple_text":"Bu basit bir metin alanıdır","_simple_text":{"type":"text","label":"Basit Metin","placeholder":"Herhangi bir metin girin...","maxLength":100},"simple_number":42,"_simple_number":{"type":"number","label":"Basit Sayı","min":0,"max":100,"step":1},"simple_boolean":false,"_simple_boolean":{"type":"boolean","label":"Basit Checkbox","description":"Bu özelliği etkinleştirmek ister misiniz?"}}
+{
+  "_meta": {
+    "type": "global",
+    "_schemaVersion": "1.2.0",
+    "_locale": "tr-TR",
+    "_lastModified": "2025-01-16T10:30:00Z"
+  },
+  "_authentication": {
+    "type": "section",
+    "label": "Kimlik Doğrulama",
+    "icon": "🔐",
+    "collapsed": false
+  },
+  "authentication": {
+    "login_title": "Sisteme Giriş Yapın Test",
+    "_login_title": {
+      "type": "text",
+      "label": "Giriş Başlığı",
+      "placeholder": "Örn: Hoş Geldiniz",
+      "required": true,
+      "minLength": 5,
+      "maxLength": 50,
+      "hint": "Giriş sayfasında görünen ana başlık"
+    },
+    "email_placeholder": "E-posta adresinizi girin",
+    "_email_placeholder": {
+      "type": "email",
+      "label": "E-posta Placeholder",
+      "placeholder": "Örn: ornek@email.com",
+      "required": true
+    },
+    "remember_me": true,
+    "_remember_me": {
+      "type": "boolean",
+      "label": "Beni Hatırla Özelliği",
+      "description": "Kullanıcıların oturum bilgilerini hatırlama seçeneği",
+      "hint": "Güvenlik nedeniyle dikkatli kullanın"
+    },
+    "login_button": "Giriş Yap",
+    "_login_button": {
+      "type": "text",
+      "label": "Giriş Butonu Metni",
+      "required": true,
+      "maxLength": 20
+    }
+  },
+  "_ui_settings": {
+    "type": "section",
+    "label": "Arayüz Ayarları",
+    "icon": "🖥️",
+    "collapsed": false
+  },
+  "ui_settings": {
+    "theme_mode": "auto",
+    "_theme_mode": {
+      "type": "radio",
+      "label": "Tema Modu",
+      "options": [
+        {
+          "label": "Açık Tema",
+          "value": "light"
+        },
+        {
+          "label": "Koyu Tema",
+          "value": "dark"
+        },
+        {
+          "label": "Sistem Teması",
+          "value": "auto"
+        }
+      ],
+      "required": true
+    },
+    "language": "tr",
+    "_language": {
+      "type": "select",
+      "label": "Dil Seçimi",
+      "options": [
+        {
+          "label": "Türkçe",
+          "value": "tr"
+        },
+        {
+          "label": "English",
+          "value": "en"
+        },
+        {
+          "label": "Deutsch",
+          "value": "de"
+        },
+        {
+          "label": "Français",
+          "value": "fr"
+        }
+      ],
+      "required": true,
+      "hint": "Arayüz dili değişikliği sayfayı yeniler"
+    },
+    "animations_enabled": true,
+    "_animations_enabled": {
+      "type": "boolean",
+      "label": "Animasyonları Etkinleştir",
+      "description": "Sayfa geçişleri ve hover efektleri için animasyonlar",
+      "hint": "Performans sorunları yaşıyorsanız kapatabilirsiniz"
+    }
+  },
+  "_colors": {
+    "type": "section",
+    "label": "Renk Paleti",
+    "icon": "🎨",
+    "collapsed": true
+  },
+  "colors": {
+    "brand_color": "#3B82F6",
+    "_brand_color": {
+      "type": "color",
+      "label": "Marka Ana Rengi",
+      "hint": "Sitenizin birincil renk teması"
+    },
+    "accent_color": "#F59E0B",
+    "_accent_color": {
+      "type": "color",
+      "label": "Vurgu Rengi",
+      "hint": "Butonlar ve önemli elementler için"
+    },
+    "danger_color": "#EF4444",
+    "_danger_color": {
+      "type": "color",
+      "label": "Tehlike Rengi",
+      "hint": "Hata mesajları ve silme butonları için"
+    }
+  },
+  "_notifications": {
+    "type": "section",
+    "label": "Bildirimler",
+    "icon": "🔔",
+    "collapsed": true
+  },
+  "notifications": {
+    "email_enabled": true,
+    "_email_enabled": {
+      "type": "boolean",
+      "label": "E-posta Bildirimleri",
+      "description": "Önemli olaylar için e-posta gönder"
+    },
+    "push_enabled": false,
+    "_push_enabled": {
+      "type": "boolean",
+      "label": "Push Bildirimleri",
+      "description": "Tarayıcı push bildirimlerini etkinleştir"
+    },
+    "frequency": "real_time",
+    "_frequency": {
+      "type": "select",
+      "label": "Bildirim Sıklığı",
+      "options": [
+        {
+          "label": "Anında",
+          "value": "real_time"
+        },
+        {
+          "label": "5 Dakikada Bir",
+          "value": "5_minutes"
+        },
+        {
+          "label": "15 Dakikada Bir",
+          "value": "15_minutes"
+        },
+        {
+          "label": "Saatte Bir",
+          "value": "hourly"
+        }
+      ],
+      "hint": "Çok sık bildirim performansı etkileyebilir"
+    }
+  },
+  "stock_messages": {
+    "zero": "Stok tükendi!",
+    "one": "Son {{count}} ürün kaldı!",
+    "few": "Sadece {{count}} adet kaldı!",
+    "other": "{{count}} ürün stokta mevcut"
+  },
+  "_stock_messages": {
+    "type": "plural",
+    "label": "Stok Durum Mesajları",
+    "variable": "count",
+    "required": true,
+    "hint": "Ürün stok durumuna göre dinamik mesajlar"
+  },
+  "order_status": {
+    "pending": "Siparişiniz alındı ve işleme konuluyor. Takip numaranız: {{order_id}}",
+    "processing": "Siparişiniz {{customer_name}} adına hazırlanıyor.",
+    "shipped": "Siparişiniz kargoya verildi. Takip numarası: {{tracking_number}}",
+    "delivered": "Siparişiniz {{customer_name}} adına başarıyla teslim edildi."
+  },
+  "_order_status": {
+    "type": "contextual",
+    "label": "Sipariş Durum Mesajları",
+    "context_key": "status",
+    "contexts": [
+      "pending",
+      "processing",
+      "shipped",
+      "delivered"
+    ],
+    "variables": [
+      "order_id",
+      "customer_name",
+      "tracking_number"
+    ],
+    "hint": "Her sipariş durumu için özelleştirilmiş mesajlar"
+  },
+  "notification_types": {
+    "info": "Bilgi: {{message}}",
+    "warning": "Uyarı: {{message}}",
+    "error": "Hata: {{message}}",
+    "success": "Başarı: {{message}}"
+  },
+  "_notification_types": {
+    "type": "contextual",
+    "label": "Bildirim Mesajları",
+    "context_key": "type",
+    "contexts": [
+      "info",
+      "warning",
+      "error",
+      "success"
+    ],
+    "variables": [
+      "message",
+      "user_name",
+      "timestamp"
+    ],
+    "hint": "Bildirim türüne göre farklı mesaj formatları"
+  },
+  "price_tiers": [
+    {
+      "name": "Bronz Üyelik",
+      "discount": 5,
+      "min_order": 100,
+      "description": "Temel avantajlar ve %5 indirim"
+    },
+    {
+      "name": "Gümüş Üyelik",
+      "discount": 10,
+      "min_order": 250,
+      "description": "Genişletilmiş avantajlar ve %10 indirim"
+    },
+    {
+      "name": "Altın Üyelik",
+      "discount": 15,
+      "min_order": 500,
+      "description": "Premium avantajlar ve %15 indirim"
+    }
+  ],
+  "_price_tiers": {
+    "type": "repeater",
+    "label": "Fiyat Katmanları",
+    "addButton": "Yeni Katman Ekle",
+    "min": 1,
+    "max": 10,
+    "reorderable": true,
+    "openable": true,
+    "itemLabel": "{{name}} - %{{discount}}",
+    "fields": {
+      "name": {
+        "type": "text",
+        "label": "Katman Adı",
+        "required": true,
+        "placeholder": "Örn: VIP Üyelik"
+      },
+      "discount": {
+        "type": "number",
+        "label": "İndirim Oranı (%)",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "required": true
+      },
+      "min_order": {
+        "type": "number",
+        "label": "Minimum Sipariş Tutarı",
+        "min": 0,
+        "step": 0.01,
+        "required": true
+      },
+      "description": {
+        "type": "textarea",
+        "label": "Katman Açıklaması",
+        "placeholder": "Bu katmanın sağladığı avantajları açıklayın...",
+        "required": true,
+        "minLength": 10,
+        "maxLength": 300
+      }
+    },
+    "hint": "Müşteri sadakat programı için farklı fiyat katmanları"
+  },
+  "faq_items": [
+    {
+      "question": "Hesabımı nasıl silebilirim?",
+      "answer": "Hesap ayarlarından 'Hesabı Sil' seçeneğini kullanabilirsiniz.",
+      "category": "account",
+      "is_featured": true
+    },
+    {
+      "question": "Şifremi unuttum, ne yapmalıyım?",
+      "answer": "Giriş sayfasındaki 'Şifremi Unuttum' linkine tıklayın.",
+      "category": "security",
+      "is_featured": false
+    }
+  ],
+  "_faq_items": {
+    "type": "repeater",
+    "label": "Sık Sorulan Sorular",
+    "addButton": "Yeni Soru Ekle",
+    "max": 20,
+    "reorderable": true,
+    "openable": true,
+    "itemLabel": "{{question}}",
+    "fields": {
+      "question": {
+        "type": "text",
+        "label": "Soru",
+        "required": true,
+        "minLength": 10,
+        "maxLength": 200,
+        "placeholder": "Müşterilerin sık sorduğu soruyu yazın..."
+      },
+      "answer": {
+        "type": "textarea",
+        "label": "Cevap",
+        "required": true,
+        "minLength": 20,
+        "maxLength": 1000,
+        "placeholder": "Sorunun detaylı cevabını yazın..."
+      },
+      "category": {
+        "type": "select",
+        "label": "Kategori",
+        "options": [
+          {
+            "label": "Hesap",
+            "value": "account"
+          },
+          {
+            "label": "Güvenlik",
+            "value": "security"
+          },
+          {
+            "label": "Ödeme",
+            "value": "payment"
+          },
+          {
+            "label": "Teknik",
+            "value": "technical"
+          }
+        ],
+        "required": true
+      },
+      "is_featured": {
+        "type": "boolean",
+        "label": "Öne Çıkarılsın mı?",
+        "description": "Ana sayfada gösterilecek önemli sorular"
+      }
+    },
+    "hint": "Müşteri destek yükünü azaltmak için kapsamlı FAQ listesi oluşturun"
+  },
+  "simple_text": "Bu basit bir metin alanıdır",
+  "_simple_text": {
+    "type": "text",
+    "label": "Basit Metin",
+    "placeholder": "Herhangi bir metin girin...",
+    "maxLength": 100
+  },
+  "simple_number": 42,
+  "_simple_number": {
+    "type": "number",
+    "label": "Basit Sayı",
+    "min": 0,
+    "max": 100,
+    "step": 1
+  },
+  "simple_boolean": false,
+  "_simple_boolean": {
+    "type": "boolean",
+    "label": "Basit Checkbox",
+    "description": "Bu özelliği etkinleştirmek ister misiniz?"
+  }
+}
