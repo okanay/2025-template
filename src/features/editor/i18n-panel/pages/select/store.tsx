@@ -3,7 +3,7 @@ import { createStore, StoreApi, useStore } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { toast } from 'sonner'
 
-const API_URL = import.meta.env.VITE_APP_BACKEND_URL + '/public/i18n'
+const API_URL = import.meta.env.VITE_APP_BACKEND_URL + '/public/content'
 
 type DraftStatus = 'none' | 'has-changes' | 'loading'
 
@@ -51,7 +51,7 @@ export function SelectFileStoreI18n({ children }: Props) {
           })
 
           try {
-            const response = await fetch(API_URL + '/draft-status', {
+            const response = await fetch(API_URL + '/i18n/draft-status', {
               method: 'GET',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
@@ -61,7 +61,32 @@ export function SelectFileStoreI18n({ children }: Props) {
               const data = await response.json()
               set((state) => {
                 state.draftStatus = data.hasChanges ? 'has-changes' : 'none'
-                state.changedFiles = data.changedFiles || []
+
+                // Parse file changes to extract lang/ns from paths
+                const parsedChanges = (data.changedFiles || [])
+                  .map((change: any) => {
+                    // "src/messages/tr/translation.json" -> lang: "tr", ns: "translation"
+                    const pathParts = change.path.split('/')
+                    if (
+                      pathParts.length >= 4 &&
+                      pathParts[0] === 'src' &&
+                      pathParts[1] === 'messages'
+                    ) {
+                      const lang = pathParts[2]
+                      const nsFile = pathParts[3]
+                      const ns = nsFile.replace('.json', '')
+
+                      return {
+                        ...change,
+                        lang,
+                        ns,
+                      }
+                    }
+                    return change
+                  })
+                  .filter((change: any) => change.lang && change.ns)
+
+                state.changedFiles = parsedChanges
               })
             } else {
               // API hatası varsa, muhtemelen draft yok
@@ -87,15 +112,19 @@ export function SelectFileStoreI18n({ children }: Props) {
           })
 
           try {
-            const response = await fetch(API_URL + '/publish-document', {
+            const response = await fetch(API_URL + '/i18n/publish', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
+              body: JSON.stringify({
+                message: 'feat(i18n): publish translation changes',
+              }),
             })
 
             if (response.ok) {
               set((state) => {
                 state.draftStatus = 'none'
+                state.changedFiles = []
                 state.isPublishing = false
               })
               toast.success('Değişiklikler başarıyla yayınlandı!')
@@ -121,7 +150,7 @@ export function SelectFileStoreI18n({ children }: Props) {
           })
 
           try {
-            const response = await fetch(API_URL + '/restart-change', {
+            const response = await fetch(API_URL + '/i18n/restart', {
               method: 'DELETE',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
@@ -130,6 +159,7 @@ export function SelectFileStoreI18n({ children }: Props) {
             if (response.ok) {
               set((state) => {
                 state.draftStatus = 'none'
+                state.changedFiles = []
                 state.isRestarting = false
               })
               toast.success('Değişiklikler geri alındı!')

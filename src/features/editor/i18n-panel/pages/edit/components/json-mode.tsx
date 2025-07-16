@@ -52,7 +52,9 @@ export const I18nJsonEditor: React.FC = () => {
           </button>
           {/* Zen Mode Toggle */}
           <button
-            onClick={() => setZenMode(!isZen)}
+            onClick={() => {
+              ;(setZenMode(!isZen), onReset())
+            }}
             title="Zen Modu Aç/Kapat"
             className={`btn-state-layer flex items-center gap-2 rounded-full border border-outline/30 px-3 py-1.5 transition-colors ${
               isZen

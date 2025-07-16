@@ -280,23 +280,20 @@ const LanguageSection = ({
   changedFiles,
   currentLang,
 }: {
-  language: any
+  language: Language
   changedFiles: any[]
   currentLang: string
 }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container">
-          <Globe className="text-on-primary-container" size={20} />
-        </div>
+        <div
+          suppressContentEditableWarning
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-high p-2"
+          dangerouslySetInnerHTML={{ __html: language.icon }}
+        />
         <div className="flex items-center gap-3">
           <h3 className="text-title-large font-medium text-on-surface">{language.label}</h3>
-          <div className="rounded-full bg-surface-container px-3 py-1">
-            <span className="font-mono text-label-medium text-on-surface-variant">
-              {language.locale}
-            </span>
-          </div>
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import { immer } from 'zustand/middleware/immer'
 import { toast } from 'sonner'
 import type { I18nPayload } from 'src/messages/schema'
 
-const API_URL = import.meta.env.VITE_APP_BACKEND_URL + '/public/i18n'
+const API_URL = import.meta.env.VITE_APP_BACKEND_URL + '/public/content'
 
 interface FileData {
   content: I18nPayload
@@ -65,7 +65,8 @@ export function EditFileStoreI18n({ children }: Props) {
           })
 
           try {
-            const response = await fetch(API_URL + `/get-document?lang=${lang}&ns=${ns}`, {
+            const filePath = `src/messages/${lang}/${ns}.json`
+            const response = await fetch(API_URL + `/i18n?path=${encodeURIComponent(filePath)}`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -79,14 +80,17 @@ export function EditFileStoreI18n({ children }: Props) {
 
             const data = await response.json()
 
+            // Parse JSON content
+            const parsedContent = JSON.parse(data.content)
+
             set((state) => {
               state.fileData = {
-                content: data.content,
+                content: parsedContent,
                 sha: data.sha,
                 branch: data.branch,
               }
-              state.i18nData = data.content
-              state.jsonEditText = JSON.stringify(data.content, null, 2)
+              state.i18nData = parsedContent
+              state.jsonEditText = data.content
               state.isLoading = false
             })
 
@@ -116,15 +120,16 @@ export function EditFileStoreI18n({ children }: Props) {
           })
 
           try {
+            const filePath = `src/messages/${lang}/${ns}.json`
             const saveData = {
-              lang,
-              ns,
-              content: state.i18nData,
+              category: 'i18n',
+              path: filePath,
+              content: JSON.stringify(state.i18nData, null, 2),
               sha: state.fileData.sha,
               message: message || `feat(i18n): update ${lang}/${ns}`,
             }
 
-            const response = await fetch(API_URL + '/save-document', {
+            const response = await fetch(API_URL + '/i18n/save', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
