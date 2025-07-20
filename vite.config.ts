@@ -4,7 +4,12 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
 
 import dotenv from 'dotenv'
-dotenv.config()
+
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' })
+} else {
+  dotenv.config({ path: '.env' })
+}
 
 export default defineConfig({
   logLevel: 'silent',

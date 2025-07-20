@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "vite dev",
     "dev:locale": "vite dev --host 0.0.0.0",
-    "build:locale": "vite build",
     "start:locale": "bun run .output/server/index.mjs",
-    "build:production": "cp .env.production .env && vite build",
+    "build:locale": "NODE_ENV=development vite build --mode development",
+    "build:production": "NODE_ENV=production vite build --mode production",
     "deploy": "bunx wrangler --cwd dist/ pages deploy",
-    "clear": "rm -rf .nitro && rm -rf .output && rm -rf .tanstack && rm -rf .DS_Store && rm -rf dist"
+    "clean": "rm -rf .output && rm -rf .tanstack && rm -rf .nitro && rm -rf dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

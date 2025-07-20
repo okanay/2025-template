@@ -1,16 +1,103 @@
 import { createFileRoute } from '@tanstack/react-router'
-
+import { useState } from 'react'
+import { getIPAddress } from 'src/api/auth-fetch'
 import { useTheme } from 'src/store/theme'
 
 export const Route = createFileRoute('/$lang/_public/')({
+  loader: async () => {
+    const responseAuthFetch = await getIPAddress()
+    const authJson = await responseAuthFetch.json()
+
+    return {
+      authJson,
+    }
+  },
   component: HomePage,
 })
 
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
+
+function LoginButton() {
+  const backendUrl = `${BACKEND_URL}/v1` // .env'den almak daha iyi
+
+  return <a href={`${backendUrl}/auth/provider/google`}>Google ile Giriş Yap</a>
+}
+
+function IPTestButton() {
+  const [response, setResponse] = useState<string | null>(null)
+  const backendUrl = `${BACKEND_URL}/v1/test/ip-address`
+
+  const handle = async () => {
+    try {
+      const response = await fetch(backendUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+      const data = await response.json()
+      setResponse(data)
+      console.log(data)
+    } catch (error) {}
+  }
+
+  return (
+    <div>
+      {response ? (
+        <p>IP Adresiniz: {JSON.stringify(response)}</p>
+      ) : (
+        <button onClick={handle}>IP Adresini Test Et</button>
+      )}
+    </div>
+  )
+}
+
+function TestBackendValidation() {
+  const [response, setResponse] = useState<string | null>(null)
+  const backendUrl = `${BACKEND_URL}/test-validate`
+
+  const handle = async () => {
+    try {
+      const response = await fetch(backendUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          name: '2',
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+      const data = await response.json()
+      setResponse(data)
+      console.log(data)
+    } catch (error) {}
+  }
+
+  return (
+    <div>
+      {response ? (
+        <p>Status: {JSON.stringify(response)}</p>
+      ) : (
+        <button onClick={handle}>Backend Validation</button>
+      )}
+    </div>
+  )
+}
+
 function HomePage() {
+  const response = Route.useLoaderData()
+  console.log(response)
+
   return (
     <div className="flex min-h-screen bg-surface text-on-background">
       <main className="mx-auto flex max-w-7xl flex-col items-center justify-center space-y-4 p-4">
         <SetTheme />
+
+        <LoginButton />
+        <IPTestButton />
+        <TestBackendValidation />
 
         <div className="rounded-4xl border border-surface-container bg-surface-container px-8 py-4 text-on-surface">
           <div className="flex items-center gap-4">
